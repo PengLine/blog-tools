@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机密码生成工具 - 工具系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* 导航栏样式 */
+        .navbar {
+            background-color: #ffffff;
+            color: #333;
+            padding: 16px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+        }
+        
+        .navbar-logo {
+            font-size: 24px;
+            font-weight: 600;
+            text-decoration: none;
+            color: #3498db;
+        }
+        
+        .navbar-menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .navbar-menu li {
+            margin-left: 32px;
+        }
+        
+        .navbar-menu a {
+            color: #555;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+        
+        .navbar-menu a:hover {
+            color: #3498db;
+        }
+        
+        /* 英雄区域样式 */
+        .hero {
+            background-color: #ffffff;
+            padding: 60px 0;
+            text-align: center;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .hero-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #2c3e50;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 24px;
+        }
+        
+        /* 容器样式 */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+        
+        /* 工具卡片样式 */
+        .tool-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 32px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .form-group.half {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input[type="number"],
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input[type="number"]:focus,
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .custom-symbols-input {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .checkbox-item label {
+            font-size: 14px;
+            color: #555;
+            font-weight: 400;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .result {
+            margin-top: 32px;
+            padding: 24px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .result h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+        
+        .result-content {
+            background-color: white;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #eaeaea;
+            margin-bottom: 16px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        .result-content.single {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .password-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+        }
+        
+        .password-item .password-text {
+            flex: 1;
+            margin-right: 80px; /* 为按钮预留空间 */
+            word-break: break-all;
+            overflow: hidden;
+        }
+        
+        .password-item .copy-single-btn {
+            flex-shrink: 0;
+            align-self: flex-start;
+            margin-top: 2px;
+            position: absolute;
+            right: 0;
+        }
+        
+        .password-item:last-child {
+            border-bottom: none;
+        }
+        
+        .password-text {
+            flex: 1;
+            margin-right: 12px;
+        }
+        
+        .copy-single-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .copy-single-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .copy-single-btn.copied {
+            background-color: #27ae60;
+        }
+        
+        .copy-btn {
+            background-color: #27ae60;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 6px;
+        }
+        
+        .copy-btn:hover {
+            background-color: #229954;
+        }
+        
+        .message {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .strength-indicator {
+            margin-top: 16px;
+        }
+        
+        .strength-bar {
+            height: 8px;
+            background-color: #eaeaea;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            transition: width 0.3s, background-color 0.3s;
+            border-radius: 4px;
+        }
+        
+        .strength-text {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        /* 页脚样式 */
+        .footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 48px 0;
+            margin-top: 60px;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
+        }
+        
+        .footer p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar-container {
+                flex-direction: column;
+                padding: 16px;
+            }
+            
+            .navbar-menu {
+                margin-top: 16px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .navbar-menu li {
+                margin: 0 12px;
+            }
+            
+            .hero {
+                padding: 40px 0;
+            }
+            
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .container {
+                padding: 40px 16px;
+            }
+            
+            .tool-card {
+                padding: 24px;
+            }
+            
+            .checkbox-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 24px;
+            }
+            
+            .form-group.half {
+                margin-bottom: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../index.html" class="navbar-logo">工具系统</a>
+            <ul class="navbar-menu">
+                <li><a href="../index.html">首页</a></li>
+                <li><a href="../index.html#tools">工具</a></li>
+                <li><a href="../index.html#about">关于</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="hero-container">
+            <h1>随机密码生成工具</h1>
+            <p>生成安全、随机的密码，保护您的账户安全</p>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div class="tool-card">
+            <div class="form-row">
+                <div class="form-group half">
+                    <label for="password-length">密码长度（字符）</label>
+                    <input type="number" id="password-length" min="6" max="30" value="12">
+                </div>
+                
+                <div class="form-group half">
+                    <label for="password-count">生成数量（个）</label>
+                    <input type="number" id="password-count" min="1" max="20" value="1">
+                </div>
+            </div>
+            
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="include-uppercase" checked>
+                    <label for="include-uppercase">包含大写字母</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="include-lowercase" checked>
+                    <label for="include-lowercase">包含小写字母</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="include-numbers" checked>
+                    <label for="include-numbers">包含数字</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="include-symbols" checked>
+                    <label for="include-symbols">包含特殊字符</label>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group half">
+                    <label for="custom-symbols">自定义特殊字符</label>
+                    <input type="text" id="custom-symbols" placeholder="例如：!@#$%^&*" value="!@#$%^&*()_+-=[]{}|;:,.<>?" class="custom-symbols-input">
+                </div>
+                
+                <div class="form-group half">
+                    <label for="min-symbols">至少包含的特殊字符数量（个）</label>
+                    <input type="number" id="min-symbols" min="0" max="20" value="2">
+                </div>
+            </div>
+            
+            <button class="btn" onclick="generatePassword()">生成密码</button>
+            
+            <div class="strength-indicator">
+                <div class="strength-bar">
+                    <div class="strength-fill" id="strength-fill"></div>
+                </div>
+                <div class="strength-text" id="strength-text">密码强度：中等</div>
+            </div>
+            
+            <div class="result">
+                <h3>生成结果</h3>
+                <div class="result-content" id="password-result"></div>
+                <button class="btn copy-btn" onclick="copyToClipboard()">一键复制全部密码</button>
+                <div class="message" id="message"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2026 工具系统. 保留所有权利.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // 生成随机密码
+        function generatePassword() {
+            const length = parseInt(document.getElementById('password-length').value);
+            const count = parseInt(document.getElementById('password-count').value);
+            const includeUppercase = document.getElementById('include-uppercase').checked;
+            const includeLowercase = document.getElementById('include-lowercase').checked;
+            const includeNumbers = document.getElementById('include-numbers').checked;
+            const includeSymbols = document.getElementById('include-symbols').checked;
+            const customSymbols = document.getElementById('custom-symbols').value;
+            const minSymbols = parseInt(document.getElementById('min-symbols').value);
+            
+            // 验证输入
+            if (includeSymbols && minSymbols > length) {
+                alert('特殊字符数量不能大于密码长度');
+                return;
+            }
+            
+            let uppercaseChars = includeUppercase ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' : '';
+            let lowercaseChars = includeLowercase ? 'abcdefghijklmnopqrstuvwxyz' : '';
+            let numberChars = includeNumbers ? '0123456789' : '';
+            let symbolChars = includeSymbols && customSymbols ? customSymbols : '';
+            
+            let allChars = uppercaseChars + lowercaseChars + numberChars + symbolChars;
+            
+            if (allChars === '') {
+                alert('请至少选择一种字符类型');
+                return;
+            }
+            
+            let passwords = [];
+            for (let j = 0; j < count; j++) {
+                let password = '';
+                let charTypes = [];
+                
+                // 确保至少包含指定数量的特殊字符
+                if (includeSymbols && minSymbols > 0) {
+                    for (let i = 0; i < minSymbols; i++) {
+                        const randomIndex = Math.floor(Math.random() * symbolChars.length);
+                        password += symbolChars[randomIndex];
+                    }
+                }
+                
+                // 填充剩余字符
+                for (let i = password.length; i < length; i++) {
+                    const randomIndex = Math.floor(Math.random() * allChars.length);
+                    password += allChars[randomIndex];
+                }
+                
+                // 打乱密码顺序
+                password = password.split('').sort(() => Math.random() - 0.5).join('');
+                passwords.push(password);
+            }
+            
+            // HTML转义函数
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+            
+            const passwordResult = document.getElementById('password-result');
+            if (count > 1) {
+                passwordResult.className = 'result-content';
+                passwordResult.innerHTML = passwords.map(pwd => `<div class="password-item"><span class="password-text">${escapeHtml(pwd)}</span><button class="copy-single-btn" onclick="copySinglePassword(this)">复制</button></div>`).join('');
+            } else {
+                passwordResult.className = 'result-content';
+                passwordResult.innerHTML = `<div class="password-item"><span class="password-text">${escapeHtml(passwords[0])}</span><button class="copy-single-btn" onclick="copySinglePassword(this)">复制</button></div>`;
+                updateStrengthIndicator(passwords[0]);
+            }
+        }
+        
+        // 复制单个密码
+        function copySinglePassword(button) {
+            const passwordText = button.previousElementSibling.textContent;
+            
+            navigator.clipboard.writeText(passwordText).then(function() {
+                const originalText = button.textContent;
+                button.textContent = '已复制';
+                button.classList.add('copied');
+                
+                setTimeout(function() {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(function(err) {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动复制');
+            });
+        }
+        
+        // 更新密码强度指示器
+        function updateStrengthIndicator(password) {
+            const length = password.length;
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasLowercase = /[a-z]/.test(password);
+            const hasNumbers = /[0-9]/.test(password);
+            const hasSymbols = /[!@#$%^&*()_+-=[]{}|;:,.<>?]/.test(password);
+            
+            let strength = 0;
+            if (length >= 8) strength += 25;
+            if (hasUppercase) strength += 25;
+            if (hasLowercase) strength += 25;
+            if (hasNumbers) strength += 12.5;
+            if (hasSymbols) strength += 12.5;
+            
+            const strengthFill = document.getElementById('strength-fill');
+            const strengthText = document.getElementById('strength-text');
+            
+            strengthFill.style.width = `${strength}%`;
+            
+            if (strength < 50) {
+                strengthFill.style.backgroundColor = '#e74c3c';
+                strengthText.textContent = '密码强度：弱';
+            } else if (strength < 75) {
+                strengthFill.style.backgroundColor = '#f39c12';
+                strengthText.textContent = '密码强度：中等';
+            } else {
+                strengthFill.style.backgroundColor = '#27ae60';
+                strengthText.textContent = '密码强度：强';
+            }
+        }
+        
+        // 复制到剪贴板
+        function copyToClipboard() {
+            const passwordResult = document.getElementById('password-result');
+            const passwordItems = passwordResult.querySelectorAll('.password-item');
+            
+            let textToCopy = '';
+            if (passwordItems.length > 0) {
+                // 复制多个密码，每个密码占一行
+                passwordItems.forEach(item => {
+                    const passwordText = item.querySelector('.password-text').textContent;
+                    textToCopy += passwordText + '\n';
+                });
+            } else {
+                // 复制单个密码
+                const passwordText = passwordResult.querySelector('.password-text');
+                if (passwordText) {
+                    textToCopy = passwordText.textContent;
+                } else {
+                    textToCopy = passwordResult.textContent;
+                }
+            }
+            
+            if (!textToCopy) {
+                alert('请先生成密码');
+                return;
+            }
+            
+            navigator.clipboard.writeText(textToCopy).then(function() {
+                const message = document.getElementById('message');
+                message.textContent = '已复制到剪贴板！';
+                message.classList.add('success');
+                
+                setTimeout(function() {
+                    message.classList.remove('success');
+                }, 2000);
+            }).catch(function(err) {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动复制');
+            });
+        }
+        
+        // 初始生成
+        generatePassword();
+    </script>
+</body>
+</html>
