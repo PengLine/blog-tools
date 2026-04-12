@@ -54,6 +54,7 @@
         
         .navbar-menu li {
             margin-left: 32px;
+            position: relative;
         }
         
         .navbar-menu a {
@@ -61,17 +62,74 @@
             color: #333;
             font-weight: 500;
             transition: color 0.3s;
+            display: block;
+            padding: 8px 0;
         }
         
         .navbar-menu a:hover {
             color: #3498db;
         }
         
+        /* 下拉菜单样式 */
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-toggle {
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .dropdown-toggle::after {
+            content: '▼';
+            font-size: 10px;
+            margin-left: 6px;
+            vertical-align: middle;
+            transition: transform 0.3s;
+        }
+        
+        .dropdown.active .dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 8px 0;
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 1000;
+        }
+        
+        .dropdown-menu li {
+            margin: 0;
+        }
+        
+        .dropdown-menu a {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        .dropdown-menu a:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .dropdown.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+        }
+        
         /* 英雄区域 */
         .hero {
             background-color: #3498db;
             color: white;
-            padding: 60px 0;
+            padding: 30px 0;
             text-align: center;
         }
         
@@ -88,7 +146,7 @@
         
         /* 工具区域 */
         .tools-section {
-            padding: 80px 0;
+            padding: 50px 0;
         }
         
         .tools-section h2 {
@@ -102,8 +160,8 @@
             background-color: white;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            padding: 32px;
-            max-width: 800px;
+            padding: 20px;
+            max-width: 1000px;
             margin: 0 auto 48px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -317,8 +375,14 @@
             <a href="../index.html" class="navbar-logo">工具系统</a>
             <ul class="navbar-menu">
                 <li><a href="../index.html">首页</a></li>
-                <li><a href="../index.html#tools">工具</a></li>
-                <li><a href="#about">关于</a></li>
+                <li class="dropdown">
+                    <a href="../index.html#tools" class="dropdown-toggle">工具</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="../pwd-util/index.html">密码生成</a></li>
+                        <li><a href="../uuid-util/index.html">UUID生成</a></li>
+                    </ul>
+                </li>
+                <li><a href="../index.html#about">关于</a></li>
             </ul>
         </div>
     </nav>
@@ -327,7 +391,7 @@
     <section class="hero">
         <div class="container">
             <h1>UUID生成工具</h1>
-            <p>生成唯一标识符，适用于各种系统和应用场景</p>
+            <p>生成唯一标识符，适用于各种系统和应用场景，可自定义生成数量</p>
         </div>
     </section>
     
@@ -335,9 +399,6 @@
     <section class="tools-section">
         <div class="container">
             <div class="tool-card">
-                <h3>UUID生成</h3>
-                <p>生成标准格式的UUID，可自定义生成数量</p>
-                
                 <div class="form-row" style="align-items: flex-end;">
                     <div class="form-group">
                         <label for="uuid-count">生成数量</label>
@@ -356,9 +417,9 @@
                             </div>
                         </div>
                     </div>
+                    <button class="btn" onclick="generateUUIDs()">生成UUID</button>
                 </div>
                 
-                <button class="btn" onclick="generateUUIDs()">生成UUID</button>
                 
                 <div class="result-section">
                     <h4>生成结果</h4>
@@ -378,8 +439,12 @@
     </footer>
     
     <script src="../common/js/utils.js"></script>
+    <script src="../common/js/nav.js"></script>
     <script>
-        // 生成UUID
+        // 初始化导航栏
+        initNavbar();
+        
+        // 生成UUID函数
         function generateUUID(includeHyphen = true) {
             const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
                 const r = Math.random() * 16 | 0;
