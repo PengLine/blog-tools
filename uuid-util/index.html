@@ -341,7 +341,7 @@
                 <div class="form-row" style="align-items: flex-end;">
                     <div class="form-group">
                         <label for="uuid-count">生成数量</label>
-                        <input type="number" id="uuid-count" min="1" max="10" value="1">
+                        <input type="number" id="uuid-count" min="1" max="10" value="1" data-name="生成数量">
                     </div>
                     <div class="form-group" style="flex-shrink: 0;">
                         <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">生成格式</label>
@@ -377,6 +377,7 @@
         </div>
     </footer>
     
+    <script src="../common/js/utils.js"></script>
     <script>
         // 生成UUID
         function generateUUID(includeHyphen = true) {
@@ -390,7 +391,12 @@
         
         // 生成多个UUID
         function generateUUIDs() {
-            const count = parseInt(document.getElementById('uuid-count').value);
+            const uuidCountInput = document.getElementById('uuid-count');
+            const count = parseInt(uuidCountInput.value);
+            
+            // 验证输入范围
+            if (!utils.validateInput(uuidCountInput)) return;
+            
             const includeHyphen = document.getElementById('uuid-format-standard').checked;
             const uuidResult = document.getElementById('uuid-result');
             
@@ -421,9 +427,11 @@
                     button.textContent = originalText;
                     button.style.backgroundColor = '#3498db';
                 }, 2000);
+                
+                utils.showSuccess('复制成功');
             }).catch(function(err) {
                 console.error('复制失败:', err);
-                alert('复制失败，请手动复制');
+                utils.showError('复制失败，请手动复制');
             });
         }
         
@@ -450,22 +458,24 @@
             }
             
             if (!textToCopy) {
-                alert('请先生成UUID');
+                utils.showError('请先生成UUID');
                 return;
             }
             
             navigator.clipboard.writeText(textToCopy).then(function() {
-                const message = document.getElementById('message');
-                message.textContent = '已复制到剪贴板！';
-                message.classList.add('success');
-                
-                setTimeout(function() {
-                    message.classList.remove('success');
-                }, 2000);
+                utils.showSuccess('已复制到剪贴板！');
             }).catch(function(err) {
                 console.error('复制失败:', err);
-                alert('复制失败，请手动复制');
+                utils.showError('复制失败，请手动复制');
             });
+        }
+        
+        // 为输入框添加blur事件监听器
+        document.getElementById('uuid-count').addEventListener('blur', validateUUIDCount);
+        
+        // 验证生成数量
+        function validateUUIDCount() {
+            utils.validateInput(document.getElementById('uuid-count'));
         }
         
         // 初始生成
