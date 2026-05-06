@@ -4,242 +4,283 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>工具系统</title>
+    <link rel="stylesheet" href="common/css/style.css">
+    <link rel="stylesheet" href="common/css/utils.css">
     <style>
-        @import 'common/css/style.css';
-        @import 'common/css/utils.css';
-    </style>
-    <style>
-        /* 容器样式 */
-        .container {
-            max-width: 1200px;
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 32px 0;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 80px 24px;
+            width: 100%;
         }
-        
-        /* 介绍区域样式 */
-        .intro {
-            background-color: white;
-            border-radius: 12px;
-            padding: 48px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+
+        /* 分类区块 */
+        .category-section {
+            margin-bottom: 32px;
         }
-        
-        .intro h2 {
-            font-size: 32px;
+
+        .category-title {
+            font-size: 15px;
             font-weight: 600;
-            margin-bottom: 24px;
-            color: #2c3e50;
+            color: #374151;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        
-        .intro p {
-            font-size: 18px;
-            line-height: 1.8;
-            margin-bottom: 24px;
-            color: #555;
-        }
-        
-        .intro ul {
-            list-style: none;
-            margin-top: 32px;
-        }
-        
-        .intro li {
-            font-size: 16px;
-            margin-bottom: 16px;
-            padding-left: 24px;
-            position: relative;
-            color: #555;
-        }
-        
-        .intro li:before {
-            content: "•";
-            color: #3498db;
-            font-size: 20px;
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-        
-        /* 工具区域样式 */
-        .tools-section {
-            margin-top: 80px;
-            text-align: center;
-        }
-        
-        .tools-section h2 {
-            font-size: 32px;
-            font-weight: 600;
-            margin-bottom: 48px;
-            color: #2c3e50;
-        }
-        
+
+        /* 工具网格 - 紧凑布局 */
         .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 32px;
-            margin-top: 48px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
         }
-        
+
+        /* 工具卡片 - 紧凑 */
         .tool-card {
-            background-color: white;
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 14px 18px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 140px;
         }
-        
+
         .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            border-color: #3b82f6;
+            background: #f8fafc;
         }
-        
+
         .tool-card h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: #2c3e50;
+            font-size: 13px;
+            font-weight: 500;
+            color: #1f2937;
+            margin: 0;
         }
-        
+
         .tool-card p {
-            font-size: 14px;
-            color: #7f8c8d;
+            display: none;
+        }
+
+        .tool-icon {
+            font-size: 16px;
+        }
+
+        /* 系统介绍 - 紧凑 */
+        .intro-section {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin-bottom: 32px;
+        }
+
+        .intro-section h2 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .intro-section p {
+            font-size: 13px;
+            color: #6b7280;
             line-height: 1.6;
+            margin-bottom: 12px;
         }
-        
-        /* 页脚样式 */
-        .footer {
-            background-color: #2c3e50;
-            color: white;
-            padding: 48px 0;
-            margin-top: 80px;
+
+        .intro-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
-        
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-            text-align: center;
+
+        .intro-feature {
+            font-size: 12px;
+            color: #374151;
+            background: #f3f4f6;
+            padding: 4px 10px;
+            border-radius: 4px;
         }
-        
-        .footer p {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-        
-        /* 响应式设计 */
+
+        /* 响应式 */
         @media (max-width: 768px) {
-            .container {
-                padding: 40px 16px;
+            .main-content {
+                padding: 20px 16px;
             }
-            
-            .intro {
-                padding: 32px;
-            }
-            
-            .intro h2 {
-                font-size: 24px;
-            }
-            
-            .tools-grid {
-                grid-template-columns: 1fr;
+
+            .tool-card {
+                min-width: 120px;
+                padding: 12px 14px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="index.html" class="navbar-logo">工具系统</a>
-            <ul class="navbar-menu">
-                <li><a href="index.html">首页</a></li>
-                <li class="dropdown">
-                    <a href="index.html#tools" class="dropdown-toggle">工具</a>
-                    <ul class="dropdown-menu">
-                        <a href="pwd/index.html">密码生成</a>
-                        <a href="uuid/index.html">UUID生成</a>
-                    </ul>
-                </li>
-                <li><a href="index.html#about">关于</a></li>
-            </ul>
-        </div>
-    </nav>
-    
-    <!-- 英雄区域 -->
-    <section class="hero">
-        <div class="hero-container">
-            <h1>工具系统</h1>
-            <p>提供各种实用工具，帮助您提高工作效率</p>
-        </div>
-    </section>
-    
-    <div class="container">
-        <!-- 系统介绍 -->
-        <section class="intro" id="about">
-            <h2>系统介绍</h2>
-            <p>工具系统是一个集成了多种实用工具的在线平台，旨在为用户提供便捷、高效的工具服务。我们致力于打造一个功能丰富、界面简洁的工具集合，满足用户在日常工作和生活中的各种需求。</p>
-            <p>系统将不断添加新的工具功能，为用户提供更加全面的服务。</p>
-            <ul>
-                <li>纯前端实现，无需后端服务</li>
-                <li>响应式设计，适配各种设备</li>
-                <li>简洁直观的用户界面</li>
-                <li>功能丰富，持续更新</li>
-            </ul>
-        </section>
-        
-        <!-- 工具区域 -->
-        <section class="tools-section" id="tools">
-            <h2>工具列表</h2>
-            <div class="tools-grid">
-                <a href="pwd/index.html" class="tool-card-link">
-                    <div class="tool-card">
-                        <h3>随机密码生成</h3>
-                        <p>生成安全、随机的密码，可自定义长度和字符类型</p>
-                    </div>
-                </a>
-                <a href="uuid/index.html" class="tool-card-link">
-                    <div class="tool-card">
-                        <h3>UUID 生成</h3>
-                        <p>生成唯一标识符，适用于各种系统和应用场景</p>
-                    </div>
-                </a>
-                <div class="tool-card">
-                    <h3>更多工具</h3>
-                    <p>即将上线更多实用工具，敬请期待</p>
-                </div>
+    <div class="page-wrapper">
+        <!-- 导航栏 -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <a href="index.html" class="navbar-logo">工具系统</a>
+                <ul class="navbar-menu">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="image/compressor/index.html">图片压缩</a></li>
+                    <li><a href="image/convert/index.html">格式转换</a></li>
+                    <li><a href="json/index.html">JSON</a></li>
+                    <li><a href="pwd/index.html">密码</a></li>
+                    <li><a href="uuid/index.html">UUID</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle">更多</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="image/watermark/index.html">图片水印</a></li>
+                            <li><a href="video/cropping/index.html">视频裁剪</a></li>
+                            <li><a href="video/watermark/index.html">视频水印</a></li>
+                            <li><a href="diagrams/mermaid/index.html">Mermaid</a></li>
+                            <li><a href="docu/signature/index.html">签名工具</a></li>
+                            <li><a href="download/index.html">下载器</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
-            
-            <style>
-                .tool-card-link {
-                    display: block;
-                    text-decoration: none;
-                    color: inherit;
-                    transition: transform 0.3s ease;
-                }
-                
-                .tool-card-link:hover {
-                    transform: translateY(-5px);
-                }
-                
-                .tool-card-link .tool-card {
-                    height: 100%;
-                    cursor: pointer;
-                }
-            </style>
+        </nav>
+
+        <!-- 英雄区域 -->
+        <section class="hero">
+            <div class="hero-container">
+                <h1>工具系统</h1>
+                <p>简单、实用的在线工具集</p>
+            </div>
         </section>
-    </div>
-    
-    <!-- 页脚 -->
-    <footer class="footer">
-        <div class="footer-container">
-            <p>&copy; 2026 工具系统. 保留所有权利.</p>
+
+        <div class="container main-content">
+            <!-- 系统介绍 -->
+            <section class="intro-section" id="about">
+                <h2>关于系统</h2>
+                <p>纯前端工具集，数据本地处理，保护隐私。无需服务器，直接在浏览器运行。</p>
+                <div class="intro-features">
+                    <span class="intro-feature">纯前端</span>
+                    <span class="intro-feature">响应式</span>
+                    <span class="intro-feature">本地处理</span>
+                    <span class="intro-feature">持续更新</span>
+                </div>
+            </section>
+
+            <!-- 工具区域 -->
+            <section id="tools">
+                <!-- 图片工具 -->
+                <div class="category-section">
+                    <h3 class="category-title">🖼️ 图片</h3>
+                    <div class="tools-grid">
+                        <a href="image/compressor/index.html" class="tool-card">
+                            <span class="tool-icon">📦</span>
+                            <h3>图片压缩</h3>
+                        </a>
+                        <a href="image/convert/index.html" class="tool-card">
+                            <span class="tool-icon">🔄</span>
+                            <h3>格式转换</h3>
+                        </a>
+                        <a href="image/watermark/index.html" class="tool-card">
+                            <span class="tool-icon">💧</span>
+                            <h3>图片水印</h3>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 视频工具 -->
+                <div class="category-section">
+                    <h3 class="category-title">🎬 视频</h3>
+                    <div class="tools-grid">
+                        <a href="video/cropping/index.html" class="tool-card">
+                            <span class="tool-icon">✂️</span>
+                            <h3>视频裁剪</h3>
+                        </a>
+                        <a href="video/watermark/index.html" class="tool-card">
+                            <span class="tool-icon">🎥</span>
+                            <h3>视频水印</h3>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 数据工具 -->
+                <div class="category-section">
+                    <h3 class="category-title">📋 数据</h3>
+                    <div class="tools-grid">
+                        <a href="json/index.html" class="tool-card">
+                            <span class="tool-icon">{ }</span>
+                            <h3>JSON 格式化</h3>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 开发工具 -->
+                <div class="category-section">
+                    <h3 class="category-title">🔧 开发</h3>
+                    <div class="tools-grid">
+                        <a href="pwd/index.html" class="tool-card">
+                            <span class="tool-icon">🔑</span>
+                            <h3>密码生成</h3>
+                        </a>
+                        <a href="uuid/index.html" class="tool-card">
+                            <span class="tool-icon">🆔</span>
+                            <h3>UUID 生成</h3>
+                        </a>
+                        <a href="diagrams/mermaid/index.html" class="tool-card">
+                            <span class="tool-icon">📊</span>
+                            <h3>Mermaid 图表</h3>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 文档工具 -->
+                <div class="category-section">
+                    <h3 class="category-title">📄 文档</h3>
+                    <div class="tools-grid">
+                        <a href="docu/signature/index.html" class="tool-card">
+                            <span class="tool-icon">✍️</span>
+                            <h3>签名工具</h3>
+                        </a>
+                        <a href="docu/watermark/index.html" class="tool-card">
+                            <span class="tool-icon">🛡️</span>
+                            <h3>文档水印</h3>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 下载工具 -->
+                <div class="category-section">
+                    <h3 class="category-title">📥 下载</h3>
+                    <div class="tools-grid">
+                        <a href="download/index.html" class="tool-card">
+                            <span class="tool-icon">⬇️</span>
+                            <h3>多线程下载</h3>
+                        </a>
+                    </div>
+                </div>
+            </section>
         </div>
-    </footer>
-    
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2026 工具系统</p>
+            </div>
+        </footer>
+    </div>
+
     <script src="common/js/utils.js"></script>
     <script src="common/js/nav.js"></script>
     <script>
-        // 平滑滚动到锚点
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -249,8 +290,6 @@
                 }
             });
         });
-        
-        // 初始化导航栏
         initNavbar();
     </script>
 </body>
