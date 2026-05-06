@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="JSON格式化工具,可以手动选择折叠节点,JSON比对工具,可高亮展示节点，指出所有不同点，JSON与Java Bean互转支持值自动填充">
+    <meta name="keywords" content="JSON格式化,JSON在线格式化,JSON比对,JSON转Java Bean,Java Bean转JSON,JSON高亮展示,JSON在线比对,无广告">
+    <meta name="author" content="余一叶知秋尽">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON在线格式化对比工具</title>
+    <link rel="stylesheet" href="/css/hexo-common.css">
+    <link rel="stylesheet" href="/css/hexo-full-screen.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>JSON工具集</h1>
+        
+        <!-- Tab导航 -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="format"><b>JSON格式化</b></button>
+            <button class="tab-btn" data-tab="compare"><b>JSON比对</b></button>
+            <button class="tab-btn" data-tab="javabean"><b>JSON与Java Bean互转</b></button>
+        </div>
+        
+        <!-- Tab内容区域 -->
+        <div class="tab-content">
+            <!-- JSON格式化Tab -->
+            <div id="format-tab" class="tab-pane active">
+                <div class="tool-container">
+                    <div class="compare-header">
+                        <h2>JSON格式化</h2>
+                        <div class="button-group">
+                            <button id="paste-btn">粘贴</button>
+                            <button id="copy-btn">复制</button>
+                            <button id="format-btn">格式化</button>
+                            <button id="collapse-btn" hidden>折叠</button>
+                            <button id="minify-btn">压缩/去转义</button>
+                            <button id="escape-btn">转义</button>
+                            <button id="line-feed-btn">是否换行</button>
+                            <button id="clear-btn">清空</button>
+                        </div>
+                    </div>
+                    <div class="input-box">
+                        <div id="error-message" class="error-message"></div>
+                        <div class="editor-container-wrapper">
+                            <button id="format-fullscreen-btn" class="fullscreen-button" onclick="toggleFullScreen()">
+						<span class="iconfont">&#xe8fa;</span></button>
+                            <div class="editor-container">
+                                <div id="line-numbers" class="line-numbers">
+                                    <div class="line-number">1</div>
+                                </div>
+                                <div id="raw-json" class="json-editor" contenteditable="true"
+                                    data-placeholder="请在此输入需要格式化的JSON数据...">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bottom-buttons">
+                            <button id="format-btn-bottom">格式化</button>
+                            <button id="copy-btn-bottom">复制</button>
+                            <button id="collapse-btn-bottom" hidden>折叠</button>
+                            <button id="minify-btn-bottom">压缩/去转义</button>
+                            <button id="escape-btn-bottom">转义</button>
+                            <button id="paste-btn-bottom" hidden>粘贴</button>
+                            <button id="clear-btn-bottom">清空</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- JSON比对Tab -->
+            <div id="compare-tab" class="tab-pane">
+                <div class="compare-container">
+                    <div class="compare-header">
+                          <h2>JSON比对</h2>
+                          <div class="button-group">
+                                <button id="start-compare-btn">开始比对</button>
+                                <button id="sync-format-btn">同步格式化</button>
+                                <button id="sync-minify-btn">同步压缩/去转义</button>
+                                <button id="sync-escape-btn">同步转义</button>
+                                <button id="clear-compare-btn">同步清除</button>
+                            </div>
+                    </div>
+                    <div class="compare-actions">
+                        <div id="compare-result" class="compare-result"></div>
+                    </div>
+                    <div class="compare-content">
+                        <div class="compare-box original">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <h3>原始JSON</h3>
+                                <div class="button-group">
+                                    <button id="copy-original-btn" class="copy-btn">复制内容</button>
+                                    <button id="format-original-btn" class="format-btn">格式化</button>
+                                    <button id="minify-original-btn" class="minify-btn">压缩</button>
+                                    <button id="clear-original-btn" class="clear-btn">清除内容</button>
+                                </div>
+                                <span class="iconfont"></span>
+                            </div>
+                            <div class="editor-container-wrapper">
+                                <div class="editor-container">
+                                    <div id="original-line-numbers" class="line-numbers">
+                                        <div class="line-number">1</div>
+                                    </div>
+                                    <div id="original-json" class="json-editor" contenteditable="true" data-placeholder="请在此输入原始JSON数据...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="compare-box target">
+                            <div style="display: flex; justify-content: space-between; align-items: center; ">
+                                <h3>目标JSON</h3>
+                                <div class="button-group">
+                                    <button id="copy-target-btn" class="copy-btn">复制内容</button>
+                                    <button id="format-target-btn" class="format-btn">格式化</button>
+                                    <button id="minify-target-btn" class="minify-btn">压缩</button>
+                                    <button id="clear-target-btn" class="clear-btn">清除内容</button>
+                                </div>
+                                <button id="compare-fullscreen-btn" class="fullscreen-btn">
+                                    <span class="iconfont">&#xe8fa;</span>
+                                </button>
+                            </div>
+                            <div class="editor-container-wrapper">
+                                <div class="editor-container">
+                                    <div id="target-line-numbers" class="line-numbers">
+                                        <div class="line-number">1</div>
+                                    </div>
+                                    <div id="target-json" class="json-editor" contenteditable="true" data-placeholder="请在此输入需要比对的JSON数据...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- JSON与Java Bean互转Tab -->
+            <div id="javabean-tab" class="tab-pane">
+                <div class="javabean-container">
+                    <div class="compare-header">
+                        <h2>JSON与Java Bean互转</h2>
+                        <div class="button-group">
+                            <button id="clear-bean-btn">同步清空</button>
+                        </div>
+                    </div>
+                    <div class="compare-content">
+                        <div class="compare-box original">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <h3>JSON输入</h3>
+                                <div class="button-group">
+                                    <button id="json-to-bean-btn">转Java Bean</button>
+                                    <button id="copy-input-btn" class="copy-btn">复制内容</button>
+                                    <button id="format-input-btn" class="format-btn">格式化</button>
+                                    <button id="minify-input-btn" class="minify-btn">压缩</button>
+                                    <button id="clear-input-btn" class="clear-btn">清除内容</button>
+                                </div>
+                            </div>
+                            <div class="editor-container-wrapper">
+                                <div class="editor-container">
+                                    <div id="input-line-numbers" class="line-numbers">
+                                        <div class="line-number">1</div>
+                                    </div>
+                                    <div id="input-content" class="json-editor" contenteditable="true" data-placeholder="请输入JSON代码...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="compare-box target">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <h3>Java Bean输入</h3>
+                                <div class="button-group">
+                                    <button id="bean-to-json-btn">转JSON</button>
+                                    <button id="copy-output-btn" class="copy-btn">复制内容</button>
+                                    <button id="format-output-btn" class="format-btn" hidden>格式化</button>
+                                    <button id="clear-output-btn" class="clear-btn">清除内容</button>
+                                </div>
+                            </div>
+                            <div class="editor-container-wrapper">
+                                <div class="editor-container">
+                                    <div id="output-line-numbers" class="line-numbers">
+                                        <div class="line-number">1</div>
+                                    </div>
+                                    <div id="output-content" class="json-editor" contenteditable="true" data-placeholder="请输入Java Bean代码...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

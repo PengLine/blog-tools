@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="批量文档免费添加水印, 批量文档本地添加水印, 隐私批量文档添加水印,批量文档本地加水印">
+	<meta name="keywords" content="文档批量加水印, 批量文档本地加水印, 隐私批量文档加水印, 无损加水印, 免费文档加水印">
+	<meta name="author" content="余一叶知秋尽">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档文字水印工具，免费添加文档水印，隐私保护文档水印，无损添加文档水印, PDF文档加水印</title>
+    <link rel="stylesheet" href="/css/hexo-common.css">
+    <link rel="stylesheet" href="style.css">
+	    <!-- 护眼模式 CSS -->
+    <link rel="stylesheet" href="/css/eye-care.css">
+	    <!-- 护眼模式 JS -->
+    <script src="/js/eye-care.js"></script> 
+    <!-- 引入PDF.js和jsPDF库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- 引入docx.js库用于处理Word文档 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>PDF 文档水印工具</h1>
+        <p class="description">
+            上传文档后，输入水印文字，可以手动拖动或者选择特定位置，直接点击指定位置即可移动水印（非铺满）。</br>
+            （注意：由于是在您本地处理，所以处理性能受限于您的设备性能。建议在性能较好的设备上使用）
+        </p>
+        <p class="description">*（<b><em>所有处理均在您本地完成，不会上传网络服务器，无需担忧泄漏隐私</em></b>）</p>
+        
+        <!-- 文件上传区域 -->
+        <div class="upload-section">
+            <input type="file" id="fileInput" accept=".pdf">
+            <!-- <input type="file" id="fileInput" accept=".pdf,.docx,.doc"> -->
+            <label for="fileInput" class="upload-btn">选择文档 (PDF)</label>
+            <p class="file-info">注：Word文件需先转换为PDF格式后添加水印。最大支持100MB文件，建议文件大小在50MB以下。</p>
+        </div>
+        
+        <!-- 预览区域 -->
+        <div class="preview-section">
+            <div id="previewContainer" class="preview-container">
+                <div id="pdfPreview" class="pdf-preview"></div>
+                <file id="previewImage" class="preview-image" alt="预览区域">
+                <div id="watermarkContainer" class="watermark-container">
+                    <div id="singleWatermark" class="watermark single-watermark" draggable="true">水印文字</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 控制面板 -->
+        <div class="control-panel">
+            <div class="control-group">
+                <label for="watermarkPosition">水印位置:</label>
+                <select id="watermarkPosition">
+                    <option value="tile" selected style="color: #869619; font-weight: 600;">铺满（整个页面）</option>
+                    <option value="center">居中</option>
+                    <option value="top-left">左上角</option>
+                    <option value="bottom-left">左下角</option>
+                    <option value="top-right">右上角</option>
+                    <option value="bottom-right">右下角</option>
+                    <option value="top-center">顶部居中</option>
+                    <option value="bottom-center">底部居中</option>
+                    <option value="left-center">左侧居中</option>
+                    <option value="right-center">右侧居中</option>
+                    <option value="single" style="color: #1414a6; font-weight: 500;">其他位置（拖动/点击）</option>
+                </select>
+                <label for="watermarkText" style="padding-left: 40px;">水印文字:</label>
+                <input type="text" id="watermarkText" value="" placeholder="输入水印文字（最多50个字符）" maxLength="50">
+            </div>
+            
+            <div class="control-group">
+                <label for="watermarkColor">文字颜色:</label>
+                <input type="color" id="watermarkColor" value="#000000">
+                <label for="watermarkSize" style="padding-left: 40px;">文字大小:</label>
+                <input type="range" id="watermarkSize" min="10" max="100" step="1" value="25">
+                <span id="sizeValue">25px</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="watermarkOpacity">水印透明度:</label>
+                <input type="range" id="watermarkOpacity" min="0" max="1" step="0.1" value="0.3">
+                <span id="opacityValue">0.3</span>
+                <label for="watermarkSpacing" style="padding-left: 20px;">水印间距:</label>
+                <input type="range" id="watermarkSpacing" min="10" max="200" step="10" value="100">
+                <span id="spacingValue">100px</span>
+            </div>
+            
+            <!-- 水印位置选择已替代单个水印和铺满水印按钮 -->
+            
+            <div class="control-group">
+                <button id="downloadBtn" class="download-btn">下载水印文档</button>
+                <div class="progress-container">
+                    <div id="downloadProgress" class="progress-bar"></div>
+                    <span id="progressText" class="progress-text">0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

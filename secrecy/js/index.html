@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript代码保护工具</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JavaScript代码保护工具</h1>
+            <p>保护您的JavaScript代码：压缩、混淆、WASM转换</p>
+        </header>
+        
+        <main>
+            <section class="upload-section">
+                <div class="upload-box">
+                    <input type="file" id="fileInput" accept=".js">
+                    <label for="fileInput" class="upload-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        <span>点击或拖拽文件到此处上传</span>
+                    </label>
+                </div>
+                <div id="fileInfo" class="file-info"></div>
+            </section>
+            
+            <section class="options-section">
+                <h2>保护选项</h2>
+                <div class="options-grid">
+                    <div class="option-item">
+                        <input type="checkbox" id="minify" checked>
+                        <label for="minify">代码压缩</label>
+                        <p>删除空格和注释，减小文件大小</p>
+                    </div>
+                    
+                    <div class="option-item">
+                        <input type="checkbox" id="obfuscate">
+                        <label for="obfuscate">代码混淆</label>
+                        <p>重命名变量和函数，使代码难以阅读</p>
+                    </div>
+                    
+                    <div class="option-item">
+                        <input type="checkbox" id="wasm">
+                        <label for="wasm">WASM转换</label>
+                        <p>将JavaScript转换为WebAssembly（实验性）</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="action-section">
+                <button id="protectBtn" class="btn-primary" disabled>保护代码</button>
+                <button id="downloadBtn" class="btn-secondary" disabled>下载结果</button>
+            </section>
+            
+            <section class="preview-section" id="previewSection">
+                <h2>代码预览</h2>
+                <div class="preview-tabs">
+                    <button class="tab-btn active" data-tab="original">原始代码</button>
+                    <button class="tab-btn" data-tab="protected">保护后代码</button>
+                </div>
+                <div class="code-container">
+                    <pre id="originalCode" class="code-block"></pre>
+                    <pre id="protectedCode" class="code-block hidden"></pre>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>© 2023 JavaScript代码保护工具 - 保护您的代码安全</p>
+        </footer>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+	<meta name="description" content="图像视频批量在线下载, 批量下载图片和视频, 支持并发下载, 支持筛选文件类型">
+	<meta name="keywords" content="图像视频批量下载, 批量下载图片和视频, 支持并发下载, 支持筛选文件类型">
+	<meta name="author" content="余一叶知秋尽">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/css/hexo-common.css">
+    <!-- 护眼模式 CSS -->
+    <link rel="stylesheet" href="/css/eye-care.css">
+	    <!-- 护眼模式 JS -->
+    <script src="/js/eye-care.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <title>媒体文件批量下载工具</title>
+</head>
+<body>
+    <div class="container" data-theme="light">
+        <h1>媒体文件批量下载工具</h1>
+        
+        <div class="input-section">
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="url-tab">直接URL下载</button>
+                    <button class="tab-btn" data-tab="extract-tab">网页图片提取</button>
+                </div>
+                
+                <div id="url-tab" class="tab-content active">
+                    <label for="streamUrls">输入资源地址 (每行一个):</label>
+                    <p class="helper-text">系统会自动格式化不规范的URL地址，包括移除http/https之前的符号和添加缺失的协议</p>
+                    <textarea id="streamUrls" placeholder="例如: https://example.com/image.jpg 或 example.com/video.mp4 或 任何包含http的地址"></textarea>
+                </div>
+                
+                <div id="extract-tab" class="tab-content">
+                    <label for="websiteUrl">输入网站URL:</label>
+                    <p class="helper-text">输入完整的网页地址，系统将尝试提取页面中的所有图片（仅限当前页面的静态图片）</p>
+                    <input type="text" id="websiteUrl" placeholder="例如: https://example.com/page.html" class="website-input">
+                    <button id="extractImages" class="extract-btn">提取图片</button>
+                    
+                    <div class="extracted-images-section">
+                        <h3>提取的图片</h3>
+                        <div id="extractedImagesContainer" class="extracted-images-container"></div>
+                        <div class="extracted-controls">
+                            <button id="selectAllImages">全选</button>
+                            <button id="deselectAllImages">取消全选</button>
+                            <button id="addSelectedToQueue">添加选中到下载队列</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="options">
+                <div class="option-group">
+                    <label for="concurrency">并发下载数:</label>
+                    <input type="number" id="concurrency" min="1" max="10" value="3">
+                </div>
+                
+                <div class="option-group">
+                    <label for="fileType">文件类型筛选:</label>
+                    <select id="fileType">
+                        <option value="all">全部类型</option>
+                        <option value="image">仅图片</option>
+                        <option value="video">仅视频</option>
+                    </select>
+                </div>
+                
+                <div class="option-group">
+                    <label for="minImageSize">最小图片尺寸:</label>
+                    <select id="minImageSize">
+                        <option value="0">不限制</option>
+                        <option value="100">100×100</option>
+                        <option value="200">200×200</option>
+                        <option value="500">500×500</option>
+                    </select>
+                </div>
+            </div>
+            <div style="text-align:center">
+                <button id="startDownload">开始下载</button>
+                <button id="clearList" class="secondary">清空列表</button>
+            </div>
+        </div>
+        
+        <div class="download-section">
+            <div class="progress-header">
+                <h2>下载进度</h2>
+                <div class="stats">
+                    <span id="totalFiles">0</span> 个文件 | 
+                    <span id="completedFiles">0</span> 已完成 | 
+                    <span id="savedLinksCount">0</span> 保存链接 |
+                    <span id="failedFiles">0</span> 失败 | 
+                    <span id="skippedFiles">0</span> 跳过
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <details class="info-details">
+                    <summary>为什么有些图片无法自动下载？</summary>
+                    <div class="info-content">
+                        <p>某些图片无法自动下载主要受以下技术限制影响：</p>
+                        <ul>
+                            <li><strong>CORS（跨域资源共享）限制</strong>：大多数网站实施了CORS策略，限制来自不同域名的JavaScript直接访问其资源</li>
+                            <li><strong>网站防盗链保护</strong>：许多图片托管站点实施了防盗链机制，会检查请求的Referer头部</li>
+                            <li><strong>服务器特定的访问控制</strong>：部分服务器会检测请求是否来自真实的浏览器环境</li>
+                            <li><strong>网络连接问题</strong>：某些服务器可能故意设置连接超时或不稳定来阻止批量下载</li>
+                            <li><strong>JavaScript环境限制</strong>：浏览器的安全策略限制了某些类型的跨域操作</li>
+                        </ul>
+                        <p>对于这类图片，系统会将其标记为"链接已保存"状态，您可以通过"在新标签页中打开保存的链接"按钮在浏览器中访问这些图片。通过右键点击图片，选择"保存图片"手动下载。</p>
+                    </div>
+                </details>
+            </div>
+            
+            <div id="downloadProgress" class="progress-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            
+            <div id="downloadList" class="download-list"></div>
+        </div>
+    </div>
+    
+    <script src="downloader.js"></script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+	<meta name="description" content="批量图像免费添加水印, 批量图像本地添加水印, 隐私批量图像添加水印,批量图像本地加水印, 图像添加文字水印, 图像添加图片水印">
+	<meta name="keywords" content="图像批量加水印, 批量图像本地加水印, 隐私批量图像加水印, 无损加水印, 免费图片添加水印, 批量图像添加水印, 图像添加文字水印, 图像添加图片水印">
+	<meta name="author" content="余一叶知秋尽">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>批量图像加水印，图像免费加水印，图片加水印，隐私图像加水印</title>
+    <link rel="stylesheet" href="/css/hexo-common.css">
+    <link rel="stylesheet" href="style.css">
+	    <!-- 护眼模式 CSS -->
+    <link rel="stylesheet" href="/css/eye-care.css">
+	    <!-- 护眼模式 JS -->
+    <script src="/js/eye-care.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>图像添加水印</h1>
+        <p class="description">
+            上传图片后，选择水印类型，输入文字或上传图片，可以手动拖动水印位置或者选择特定位置，支持批量添加水印。<br>
+            如果你需要所有图片都使用相同水印，只需勾选“应用到所有图片”即可。如果不同图片使用特定水印，取消勾选即可。
+        </p>
+        <p class="description">*（<b><em>所有处理均在您本地完成，不会上传网络服务器，无需担忧泄漏隐私</em></b>）</p>
+        <div class="upload-section">
+           <input type="file" id="imageUpload" accept="image/*" multiple hidden>
+		<label for="imageUpload" class="upload-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span id="uploadBtnText">上传图片（支持多选，最多30张）</span>
+                <span id="uploadLoading" style="display: none;">图片加载中...</span>
+            </label>
+        </div>
+
+        <div id="fileList" class="file-list">
+            <div class="file-list-empty">请上传图片以显示文件列表</div>
+        </div>
+        
+        <div class="preview-section">
+			<div id="previewContainer">
+				<p>请上传图片以查看预览</p>
+				<p id="manualPositionInfo" class="manual-position-info" style="display: none;">提示：点击并拖动水印可以调整位置</p>
+			</div>
+		</div>
+        
+        <div class="watermark-settings">
+            <div class="setting-group">
+                <label style="margin-right: 15px;">水印类型：</label>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="watermarkType" value="text" checked>
+                        <span>文字水印</span>
+                    </label>
+                    <label class="radio-label" style="margin-left: 20px;">
+                        <input type="radio" name="watermarkType" value="image">
+                        <span>图片水印</span>
+                    </label>
+
+                    <label class="checkbox-label" style="margin-left: 50px;">
+                        <input type="checkbox" id="applyToAllImages" value="applyToAll">
+                        <span>以下设置改动时应用到所有图片<span class="tooltip-icon">ℹ</span></span>
+                        <p class="tooltip">
+                            勾选后，对水印（类型、位置、颜色、大小、透明度）等的设置，会应用到所有已上传图片中，所有图片保持样式一致。</br>
+                            不勾选则仅对当前选中图片生效。
+                        </p>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="setting-row">
+                <div class="setting-group" id="textWatermarkGroup">
+                    <label for="watermarkText">水印文字：</label>
+                    <input type="text" id="watermarkText" placeholder="请输入水印文字（最多30个字符）" maxlength="30">
+                    <label for="watermarkColor" style="margin-left: 30px;">文字颜色：</label>
+                    <input type="color" id="watermarkColor" value="#000000">
+                </div>
+            </div>
+            
+            <div class="setting-group" id="imageWatermarkGroup" style="display: none;">
+                <label for="imageWatermarkUpload">选择水印图片：</label>
+                <input type="file" id="imageWatermarkUpload" accept="image/*">
+            </div>
+            
+            <div class="setting-row">
+                <div class="setting-group">
+                    <label for="watermarkPosition">水印位置：</label>
+                    <select id="watermarkPosition">
+                        <option value="top-left">左上角</option>
+                        <option value="top-right">右上角</option>
+                        <option value="bottom-left">左下角</option>
+                        <option value="bottom-right">右下角</option>
+                        <option value="center">居中</option>
+                        <option value="tiled">平铺（重复铺满）</option>
+                        <option value="manual">手动定位 (拖动水印)</option>
+                    </select>
+                    <label for="watermarkDensity" style="margin-left: 30px;">平铺稀疏度：</label>
+                    <input type="range" id="watermarkDensity" min="1" max="10" value="4" step="1" style="width: 30px;">
+                    <span id="densityValue">4</span>
+                    <p class="tooltip">
+                        （调整“平铺”稀疏度：值越大，水印间距越大）
+                    </p>
+                </div>
+            </div>
+            
+            <div class="setting-row">
+                <div class="setting-group">
+                    <label for="watermarkOpacity">水印透明度：</label>
+                    <input type="range" id="watermarkOpacity" min="10" max="100" value="30">
+                    <span id="opacityValue">30%</span>
+                </div>
+                
+                <div class="setting-group">
+                    <label for="watermarkSize">水印大小：</label>
+                    <input type="range" id="watermarkSize" min="10" max="100" value="20">
+                    <span id="sizeValue">20px</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button id="downloadCurrentImage" disabled>
+                <span id="downloadCurrentText">下载当前图片</span>
+                <span id="downloadCurrentLoading" style="display: none;">图片生成中...</span>
+            </button>
+            <button id="downloadAllImages" disabled>
+                <span id="downloadAllText">打包下载所有</span>
+                <span id="downloadAllLoading" style="display: none;">图片打包中...</span>
+            </button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

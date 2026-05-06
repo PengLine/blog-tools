@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="视频免费在线裁剪工具,免费在线视频裁剪工具,支持范围大小和时间长度裁剪,隐私保护">
+    <meta name="keywords" content="视频免费在线裁剪,免费在线视频裁剪,视频大小在线裁剪,免费视频长度裁剪,隐私视频裁剪">
+    <meta name="author" content="余一叶知秋尽">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>免费视频剪辑工具，支持范围大小和时间长度裁剪</title>
+    <link rel="stylesheet" href="/css/hexo-common.css">
+    <link rel="stylesheet" href="styles.css">
+	    <!-- 护眼模式 CSS -->
+    <link rel="stylesheet" href="/css/eye-care.css">
+	    <!-- 护眼模式 JS -->
+    <script src="/js/eye-care.js"></script> 
+</head>
+<body>
+    <div class="container">
+        <h1>视频剪辑工具</h1>
+        <p class="description">
+            支持<b style="color: cadetblue;">尺寸裁剪、时长裁剪</b>，拖动裁剪框或调整下方参数，即可执行裁剪。</br>
+            （由于所有处理均在您本地完成，处理速度取决于您的计算机性能。文件过大易出现卡顿、掉帧情况）</br>
+        </p>
+        <p class="description">*（<b><em>所有处理均在您本地完成，不会上传网络服务器，无需担忧隐私泄漏。</em></b>）</p>
+        <div class="upload-section">
+            <input type="file" id="videoUpload" accept="video/*">
+            <label for="videoUpload" class="upload-btn">上传视频文件</label>
+            <p class="upload-note">* 支持最大视频文件100MB，建议大小不超过50MB</p>
+        </div>
+
+        <div class="preview-section" id="previewSection">
+            <div class="cropping-video-container">
+                <div id="videoInfo" class="video-info"></div>
+                <video id="videoPlayer" controls></video>
+                <div id="cropSelection" class="crop-selection"></div>
+                <canvas id="cropCanvas" class="hidden"></canvas>
+            </div>
+            <div class="crop-instructions">
+                <p>提示: 缩放或拖拽视频区域裁剪框，手动调节大小和位置。通过调整下方参数，可实时预览裁剪效果。</p>
+            </div>
+        </div>
+
+        <div class="settings-section" id="settingsSection">
+            <div class="dimension-settings">
+                <h3>尺寸裁剪</h3>
+                <div class="dimension-row">
+                    <div class="input-group">
+                        <label for="cropWidth">宽度 (像素):</label>
+                        <input type="number" id="cropWidth" min="100" step="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="cropHeight">高度 (像素):</label>
+                        <input type="number" id="cropHeight" min="100" step="1">
+                    </div>
+                </div>
+                <div class="coordinate-row">
+                    <div class="input-group">
+                        <label for="cropX">起始X坐标:</label>
+                        <input type="number" id="cropX" min="0" step="1">
+                    </div>
+                    <div class="input-group">
+                        <label for="cropY">起始Y坐标:</label>
+                        <input type="number" id="cropY" min="0" step="1">
+                    </div>
+                </div>
+                <div class="crop-mode" hidden>
+                    <label><input type="checkbox" id="enableDragCrop" checked> 启用手动画框裁剪</label>
+                </div>
+            </div>
+
+            <div class="time-settings">
+                <h3>时长裁剪</h3>
+                <div class="time-row">
+                    <div class="input-group">
+                        <label for="startTime">开始时间 (秒):</label>
+                        <input type="number" id="startTime" min="0" step="0.1">
+                    </div>
+                    <div class="input-group">
+                        <label for="endTime">结束时间 (秒):</label>
+                        <input type="number" id="endTime" min="0" step="0.1">
+                    </div>
+                </div>
+                <div class="time-display">
+                    <p>视频总时长: <span id="totalDuration">00:00</span></p>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="applyCropBtn">开始执行裁剪</button>
+                <div class="progress-container" id="progress-container" style="display: none;">
+                    <div class="progress-bar" id="progressBar"></div>
+                    <span class="progress-percentage" id="progressPercentage">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="output-section" id="outputSection">
+            <h2>裁剪结果</h2>
+            <div class="result-container">
+                <video id="outputVideo" controls></video>
+            </div>
+            <div class="download-buttons">
+                <button id="downloadBtn">下载裁剪视频</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 默认模态框 -->
+    <div id="defaultModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">提示</h3>
+                <button class="close-btn" onclick="document.getElementById('defaultModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">这是一个提示消息。</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="document.getElementById('defaultModal').classList.remove('active')">关闭</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 引入视频处理脚本 -->
+    <script src="script.js"></script>
+</body>
+</html>
