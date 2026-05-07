@@ -8,7 +8,7 @@
         var brandLink = sidebar.querySelector('.sidebar-brand a');
         var brand = sidebar.querySelector('.sidebar-brand');
 
-        // Wrap brand text in span (for collapse hiding)
+        // Wrap brand text in span
         if (brandLink && !brandLink.querySelector('.brand-text')) {
             var icon = brandLink.querySelector('.brand-icon');
             var textNode = icon ? icon.nextSibling : brandLink.firstChild;
@@ -24,7 +24,14 @@
             }
         }
 
-        // Add toggle button
+        // Create floating toggle ball
+        var floatBall = document.createElement('div');
+        floatBall.className = 'sidebar-float-ball';
+        floatBall.title = '展开导航栏';
+        floatBall.innerHTML = '<span class="ball-icon">⚡</span><span class="ball-tooltip">展开导航</span>';
+        document.body.appendChild(floatBall);
+
+        // Add toggle button inside sidebar
         if (brand && !brand.querySelector('.sidebar-toggle-btn')) {
             var btn = document.createElement('button');
             btn.className = 'sidebar-toggle-btn';
@@ -36,16 +43,23 @@
             var collapsed = localStorage.getItem('sidebar-collapsed') === 'true';
             if (collapsed) {
                 sidebar.classList.add('collapsed');
+                floatBall.classList.add('visible');
             }
 
-            // Toggle on click
+            // Sidebar button: collapse
             btn.addEventListener('click', function () {
-                sidebar.classList.toggle('collapsed');
-                var isCollapsed = sidebar.classList.contains('collapsed');
-                localStorage.setItem('sidebar-collapsed', isCollapsed);
-                btn.title = isCollapsed ? '展开导航栏' : '折叠导航栏';
+                sidebar.classList.add('collapsed');
+                floatBall.classList.add('visible');
+                localStorage.setItem('sidebar-collapsed', 'true');
             });
         }
+
+        // Float ball: expand
+        floatBall.addEventListener('click', function () {
+            sidebar.classList.remove('collapsed');
+            floatBall.classList.remove('visible');
+            localStorage.setItem('sidebar-collapsed', 'false');
+        });
 
         // Mobile: close sidebar on link click
         sidebar.querySelectorAll('a').forEach(function (link) {
