@@ -10,6 +10,7 @@
     <title>图片转换工具</title>
 
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../../common/css/style.css">
     <!-- 引入Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入Font Awesome -->
@@ -33,7 +34,33 @@
         }
     </script>
 </head>
-<body class="bg-gray-100 font-inter min-h-screen flex flex-col">
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <a href="../../index.html">⚡ 工具系统</a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">导航</div>
+            <a href="../../index.html">🏠 首页</a>
+            <div class="nav-section">工具</div>
+            <a href="../../json/index.html">{ } JSON格式化</a>
+            <a href="../../pwd/index.html">🔑 密码生成</a>
+            <a href="../../uuid/index.html">🆔 UUID生成</a>
+            <a href="../../diagrams/mermaid/index.html">📊 Mermaid图表</a>
+            <a href="../../image/compressor/index.html">📦 图片压缩</a>
+            <a href="../../image/convert/index.html" class="active">🔄 格式转换</a>
+            <a href="../../image/watermark/index.html">💧 图片水印</a>
+            <a href="../../video/cropping/index.html">✂️ 视频裁剪</a>
+            <a href="../../video/watermark/index.html">🎥 视频水印</a>
+            <a href="../../docu/signature/index.html">✍️ 签名工具</a>
+            <a href="../../docu/watermark/index.html">🛡️ 文档水印</a>
+            <a href="../../download/index.html">⬇️ 多线程下载</a>
+        </nav>
+        <div class="sidebar-footer">
+            <p>纯前端运行 · 数据本地处理</p>
+        </div>
+    </aside>
+    <main class="main">
     <!-- 头部 -->
     <header class="bg-gradient-to-r from-primary to-accent text-white py-6 px-4 shadow-md">
         <div class="container mx-auto max-w-5xl">
@@ -251,5 +278,6 @@
 
     <!-- 引用外部JavaScript文件 -->
     <script src="script.js"></script>
+    </main>
 </body>
 </html>

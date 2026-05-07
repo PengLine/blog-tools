@@ -9,6 +9,7 @@
     <title>文档在线免费签名工具，PDF文档在线签名，Word文档在线签名</title>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../common/css/style.css">
 
     <!-- PDF.js库 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -26,6 +27,32 @@
     <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 </head>
 <body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <a href="../../index.html">⚡ 工具系统</a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">导航</div>
+            <a href="../../index.html">🏠 首页</a>
+            <div class="nav-section">工具</div>
+            <a href="../../json/index.html">{ } JSON格式化</a>
+            <a href="../../pwd/index.html">🔑 密码生成</a>
+            <a href="../../uuid/index.html">🆔 UUID生成</a>
+            <a href="../../diagrams/mermaid/index.html">📊 Mermaid图表</a>
+            <a href="../../image/compressor/index.html">📦 图片压缩</a>
+            <a href="../../image/convert/index.html">🔄 格式转换</a>
+            <a href="../../image/watermark/index.html">💧 图片水印</a>
+            <a href="../../video/cropping/index.html">✂️ 视频裁剪</a>
+            <a href="../../video/watermark/index.html">🎥 视频水印</a>
+            <a href="../../docu/signature/index.html" class="active">✍️ 签名工具</a>
+            <a href="../../docu/watermark/index.html">🛡️ 文档水印</a>
+            <a href="../../download/index.html">⬇️ 多线程下载</a>
+        </nav>
+        <div class="sidebar-footer">
+            <p>纯前端运行 · 数据本地处理</p>
+        </div>
+    </aside>
+    <main class="main">
     <div class="container">
         <h1>文档在线签名工具</h1>
         
@@ -106,5 +133,6 @@
     <!-- 边界检查工具模块 -->
     <script src="boundary-utils.js?v=1.0.0"></script>
     <script src="script.js?v=20251224"></script>
+    </main>
 </body>
 </html>
