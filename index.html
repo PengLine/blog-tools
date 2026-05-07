@@ -49,11 +49,15 @@
             overflow-y: auto;
             overflow-x: hidden;
             border-right: 1px solid #e8ecf1;
+            transition: width 0.25s ease;
         }
 
         .sidebar-brand {
             padding: 24px 20px 18px;
             border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .sidebar-brand a {
@@ -65,6 +69,38 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .brand-text {
+            transition: opacity 0.15s ease;
+        }
+
+        /* Collapse toggle button */
+        .sidebar-toggle-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            color: #64748b;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-toggle-btn:hover {
+            background: #f1f5f9;
+            color: #334155;
+            border-color: #cbd5e1;
+        }
+
+        .sidebar-toggle-btn svg {
+            transition: transform 0.25s ease;
         }
 
         .sidebar-brand .brand-icon {
@@ -92,6 +128,9 @@
             padding: 16px 12px 6px;
             font-weight: 600;
             letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity 0.15s ease, height 0.15s ease, padding 0.15s ease;
         }
 
         .sidebar-nav a {
@@ -105,6 +144,8 @@
             font-size: 14px;
             font-weight: 500;
             transition: background 0.15s ease, color 0.15s ease;
+            overflow: hidden;
+            white-space: nowrap;
         }
 
         .sidebar-nav a:hover {
@@ -131,6 +172,65 @@
             font-size: 12px;
             color: #94a3b8;
             text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity 0.15s ease;
+        }
+
+        /* ========== Collapsed Sidebar ========== */
+        .sidebar.collapsed {
+            --sidebar-width: 64px;
+        }
+
+        .sidebar.collapsed .sidebar-brand {
+            padding: 24px 12px 18px;
+            justify-content: center;
+        }
+
+        .sidebar.collapsed .sidebar-brand a {
+            justify-content: center;
+        }
+
+        .sidebar.collapsed .brand-text {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sidebar.collapsed .sidebar-toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: 8px;
+            background: #f8fafc;
+        }
+
+        .sidebar.collapsed .sidebar-toggle-btn svg {
+            transform: rotate(180deg);
+        }
+
+        .sidebar.collapsed .sidebar-nav {
+            padding: 12px 8px;
+        }
+
+        .sidebar.collapsed .sidebar-nav .nav-section {
+            height: 0;
+            padding: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sidebar.collapsed .sidebar-nav a {
+            justify-content: center;
+            padding: 9px 8px;
+        }
+
+        .sidebar.collapsed .sidebar-nav a span:not(.nav-icon) {
+            display: none;
+        }
+
+        .sidebar.collapsed .sidebar-footer {
+            opacity: 0;
+            pointer-events: none;
         }
 
         /* ========== Main Content ========== */
@@ -140,6 +240,11 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            transition: margin-left 0.25s ease;
+        }
+
+        .sidebar.collapsed ~ .main {
+            margin-left: 64px;
         }
 
         /* Hero */
@@ -405,6 +510,10 @@
                 transform: translateX(0);
             }
 
+            .sidebar.collapsed ~ .main {
+                margin-left: 0;
+            }
+
             .sidebar-toggle { display: flex; }
 
             .main { margin-left: 0; }
@@ -659,6 +768,7 @@
         </div>
     </main>
 
+    <script src="common/js/nav.js"></script>
     <script>
         // Mobile sidebar toggle
         const sidebar = document.getElementById('sidebar');
