@@ -292,24 +292,27 @@
     </style>
 </head>
 <body>
-    <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="../index.html" class="navbar-logo">工具系统</a>
-            <ul class="navbar-menu">
-                <li><a href="../index.html">首页</a></li>
-                <li class="dropdown">
-                    <a href="../index.html#tools" class="dropdown-toggle">工具</a>
-                    <ul class="dropdown-menu">
-                        <a href="../pwd/index.html">密码生成</a>
-                        <a href="../uuid/index.html">UUID生成</a>
-                    </ul>
-                </li>
-                <li><a href="../index.html#about">关于</a></li>
-            </ul>
+    <!-- 侧边导航栏 -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <a href="../index.html">⚡ 工具系统</a>
         </div>
-    </nav>
-    
+        <nav class="sidebar-nav">
+            <div class="nav-section">导航</div>
+            <a href="../index.html">🏠 首页</a>
+            <div class="nav-section">工具</div>
+            <a href="../pwd/index.html" class="active">🔑 密码生成</a>
+            <a href="../uuid/index.html">🆔 UUID生成</a>
+            <a href="../json/index.html">{ } JSON格式化</a>
+            <a href="../diagrams/mermaid/index.html">📊 Mermaid图表</a>
+        </nav>
+        <div class="sidebar-footer">
+            <p>纯前端运行 · 数据本地处理</p>
+        </div>
+    </aside>
+
+    <!-- 主内容 -->
+    <main class="main">
     <!-- 英雄区域 -->
     <section class="hero">
         <div class="hero-container">
@@ -387,13 +390,10 @@
             <p>&copy; 2026 工具系统. 保留所有权利.</p>
         </div>
     </footer>
-    
+    </main>
+
     <script src="../common/js/utils.js"></script>
-    <script src="../common/js/nav.js"></script>
     <script>
-        // 初始化导航栏
-        initNavbar();
-        
         // 生成密码函数
         function generatePassword() {
             const length = parseInt(document.getElementById('password-length').value);
