@@ -471,28 +471,62 @@
                 return;
             }
             
+            // 收集启用的字符类型
+            const enabledTypes = [];
+            if (includeUppercase && uppercaseChars) enabledTypes.push(uppercaseChars);
+            if (includeLowercase && lowercaseChars) enabledTypes.push(lowercaseChars);
+            if (includeNumbers && numberChars) enabledTypes.push(numberChars);
+            if (includeSymbols && symbolChars) enabledTypes.push(symbolChars);
+
             let passwords = [];
             for (let j = 0; j < count; j++) {
-                let password = '';
-                let charTypes = [];
-                
-                // 确保至少包含指定数量的特殊字符
-                if (includeSymbols && minSymbols > 0) {
-                    for (let i = 0; i < minSymbols; i++) {
-                        const randomIndex = Math.floor(Math.random() * symbolChars.length);
-                        password += symbolChars[randomIndex];
+                // 每种类型等比例分配：base 个，余数随机分配
+                const typeCount = enabledTypes.length;
+                const base = Math.floor(length / typeCount);
+                const remainder = length % typeCount;
+
+                // 为每种类型计算配额，符号类型至少满足 minSymbols
+                const quotas = enabledTypes.map((chars, idx) => {
+                    let q = base + (idx < remainder ? 1 : 0);
+                    // 符号类型确保至少 minSymbols
+                    if (includeSymbols && chars === symbolChars && q < minSymbols) {
+                        q = minSymbols;
+                    }
+                    return q;
+                });
+
+                // 如果符号配额提升导致总数超过 length，从其他类型均匀削减
+                let totalQuota = quotas.reduce((a, b) => a + b, 0);
+                while (totalQuota > length) {
+                    // 找到配额最大(且大于0)的非符号类型削减
+                    let maxIdx = -1;
+                    let maxVal = 0;
+                    for (let i = 0; i < quotas.length; i++) {
+                        if (enabledTypes[i] !== symbolChars && quotas[i] > maxVal) {
+                            maxVal = quotas[i];
+                            maxIdx = i;
+                        }
+                    }
+                    if (maxIdx === -1) break; // 全是符号，无法削减
+                    quotas[maxIdx]--;
+                    totalQuota--;
+                }
+
+                // 按配额从各类型取字符
+                let chars = [];
+                for (let i = 0; i < enabledTypes.length; i++) {
+                    for (let k = 0; k < quotas[i]; k++) {
+                        const ri = Math.floor(Math.random() * enabledTypes[i].length);
+                        chars.push(enabledTypes[i][ri]);
                     }
                 }
-                
-                // 填充剩余字符
-                for (let i = password.length; i < length; i++) {
-                    const randomIndex = Math.floor(Math.random() * allChars.length);
-                    password += allChars[randomIndex];
+
+                // Fisher-Yates 洗牌
+                for (let i = chars.length - 1; i > 0; i--) {
+                    const ri = Math.floor(Math.random() * (i + 1));
+                    [chars[i], chars[ri]] = [chars[ri], chars[i]];
                 }
-                
-                // 打乱密码顺序
-                password = password.split('').sort(() => Math.random() - 0.5).join('');
-                passwords.push(password);
+                passwords.push(chars.join(''));
             }
             
             // HTML转义函数
@@ -509,7 +543,7 @@
             } else {
                 passwordResult.className = 'result-content';
                 passwordResult.innerHTML = `<div class="password-item"><span class="password-text">${escapeHtml(passwords[0])}</span><button class="copy-single-btn" onclick="copySinglePassword(this)">复制</button></div>`;
-                updateStrengthIndicator(passwords[0]);
+                updateStrengthIndicator(passwords[0], symbolChars);
             }
         }
         
@@ -535,12 +569,12 @@
         }
         
         // 更新密码强度指示器
-        function updateStrengthIndicator(password) {
+        function updateStrengthIndicator(password, symbols) {
             const length = password.length;
             const hasUppercase = /[A-Z]/.test(password);
             const hasLowercase = /[a-z]/.test(password);
             const hasNumbers = /[0-9]/.test(password);
-            const hasSymbols = /[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password);
+            const hasSymbols = symbols ? new RegExp('[' + symbols.replace(/[.*+?^${}()|[\]\\-]/g, '\\$&') + ']').test(password) : false;
             
             // 计算字符种类数
             let charTypes = 0;
