@@ -365,7 +365,7 @@
             <div class="form-row">
                 <div class="form-group half">
                     <label for="password-length">密码长度（字符）</label>
-                    <input type="number" id="password-length" min="6" max="30" value="16" data-name="密码长度">
+                    <input type="number" id="password-length" min="6" max="20" value="16" data-name="密码长度">
                 </div>
                 
                 <div class="form-group half">
@@ -396,7 +396,7 @@
             <div class="form-row">
                 <div class="form-group half">
                     <label for="custom-symbols">自定义特殊字符</label>
-                    <input type="text" id="custom-symbols" placeholder="例如：!@#$%^&*[]{}()|" value="!@#$%&*_+-=;:,." class="custom-symbols-input">
+                    <input type="text" id="custom-symbols" placeholder="留空使用默认：!@#$%&*_+-=;:,." value="" class="custom-symbols-input">
                 </div>
                 
                 <div class="form-group half">
@@ -462,7 +462,7 @@
             let uppercaseChars = includeUppercase ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' : '';
             let lowercaseChars = includeLowercase ? 'abcdefghijklmnopqrstuvwxyz' : '';
             let numberChars = includeNumbers ? '0123456789' : '';
-            let symbolChars = includeSymbols && customSymbols ? customSymbols : '';
+            let symbolChars = includeSymbols ? (customSymbols || '!@#$%&*_+-=;:,.') : '';
             
             let allChars = uppercaseChars + lowercaseChars + numberChars + symbolChars;
             
@@ -543,7 +543,7 @@
             } else {
                 passwordResult.className = 'result-content';
                 passwordResult.innerHTML = `<div class="password-item"><span class="password-text">${escapeHtml(passwords[0])}</span><button class="copy-single-btn" onclick="copySinglePassword(this)">复制</button></div>`;
-                updateStrengthIndicator(passwords[0], symbolChars);
+                updateStrengthIndicator(passwords[0]);
             }
         }
         
@@ -569,53 +569,31 @@
         }
         
         // 更新密码强度指示器
-        function updateStrengthIndicator(password, symbols) {
+        function updateStrengthIndicator(password) {
             const length = password.length;
-            const hasUppercase = /[A-Z]/.test(password);
-            const hasLowercase = /[a-z]/.test(password);
-            const hasNumbers = /[0-9]/.test(password);
-            const hasSymbols = symbols ? new RegExp('[' + symbols.replace(/[.*+?^${}()|[\]\\-]/g, '\\$&') + ']').test(password) : false;
-            
-            // 计算字符种类数
-            let charTypes = 0;
-            if (hasUppercase) charTypes++;
-            if (hasLowercase) charTypes++;
-            if (hasNumbers) charTypes++;
-            if (hasSymbols) charTypes++;
-            
-            // 基础长度分数（占比降低）
-            let lengthScore = 0;
-            if (length >= 6) lengthScore += 5;
-            if (length >= 8) lengthScore += 8;
-            if (length >= 12) lengthScore += 10;
-            if (length >= 16) lengthScore += 20;
-            if (length >= 20) lengthScore += 30;
-            
-            // 字符种类分数（占比增加，种类的多少比长度更加重要）
-            let typeScore = 0;
-            switch (charTypes) {
-                case 1: typeScore = 5; break;
-                case 2: typeScore = 10; break;  // 显著增加
-                case 3: typeScore = 20; break;  // 显著增加
-                case 4: typeScore = 30; break;  // 显著增加
-            }
-            
-            // 组合分数（字符种类越多，组合分数越高）
-            let comboScore = 0;
-            if (charTypes >= 2) comboScore += 5;
-            if (charTypes >= 3) comboScore += 10;
-            if (charTypes >= 4) comboScore += 20;
-            
-            // 最终强度分数
-            let strength = lengthScore + typeScore + comboScore;
-            // 确保分数在0-100之间
-            strength = Math.min(100, Math.max(0, strength));
-            
+            const maxLength = 20;
+            const minLength = 6;
+
+            // 字符种类数
+            let typeCount = 0;
+            if (document.getElementById('include-uppercase').checked) typeCount++;
+            if (document.getElementById('include-lowercase').checked) typeCount++;
+            if (document.getElementById('include-numbers').checked) typeCount++;
+            if (document.getElementById('include-symbols').checked) typeCount++;
+
+            // 长度得分: 6→0, 20→100
+            const lengthScore = ((length - minLength) / (maxLength - minLength)) * 100;
+            // 种类得分: 1种→0, 4种→100
+            const typeScore = ((typeCount - 1) / 3) * 100;
+
+            // 等权重综合
+            const strength = Math.round((lengthScore + typeScore) / 2);
+
             const strengthFill = document.getElementById('strength-fill');
             const strengthText = document.getElementById('strength-text');
-            
+
             strengthFill.style.width = `${strength}%`;
-            
+
             if (strength < 20) {
                 strengthFill.style.backgroundColor = '#e74c3c';
                 strengthText.textContent = '密码强度：极弱';
@@ -625,7 +603,7 @@
             } else if (strength < 60) {
                 strengthFill.style.backgroundColor = '#f39c12';
                 strengthText.textContent = '密码强度：中等';
-            } else if (strength < 90) {
+            } else if (strength < 85) {
                 strengthFill.style.backgroundColor = '#27ae60';
                 strengthText.textContent = '密码强度：强';
             } else {
