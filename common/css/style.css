@@ -211,7 +211,7 @@ body {
 .page-hero {
     background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 50%, #f0f4ff 100%);
     color: #1e293b;
-    padding: 36px 40px;
+    padding: 30px 30px;
     text-align: center;
     position: relative;
     overflow: hidden;
