@@ -1,6 +1,7 @@
 const inputEl = document.getElementById('yaml-input');
 const outputEl = document.getElementById('yaml-output');
 const outputLines = document.getElementById('output-lines');
+const inputLines = document.getElementById('input-lines');
 const errorList = document.getElementById('error-list');
 const errorPanel = document.getElementById('error-panel');
 const errorCount = document.getElementById('error-count');
@@ -25,9 +26,19 @@ function updateLineNumbers(text) {
     outputLines.innerHTML = lines.map((_, i) => `<span>${i + 1}</span>`).join('');
 }
 
+function updateInputLines() {
+    const lines = inputEl.value.split('\n');
+    inputLines.innerHTML = lines.map((_, i) => `<span>${i + 1}</span>`).join('');
+}
+
+inputEl.addEventListener('input', updateInputLines);
+inputEl.addEventListener('scroll', () => {
+    inputLines.scrollTop = inputEl.scrollTop;
+});
+
 function formatYaml() {
-    const input = inputEl.value.trim();
-    if (!input) {
+    const input = inputEl.value.trimEnd();
+    if (!input.trim()) {
         clearOutput();
         return;
     }
@@ -55,22 +66,24 @@ function formatYaml() {
 function showError(e, input) {
     const lines = input.split('\n');
 
-    // yaml@2 YAMLParseError has linePos array with {line, col}
-    let line = 0, col = 0;
+    // yaml@2 YAMLParseError has linePos array with {line, col} — already 1-indexed
+    let line = 1, col = 1;
     if (e.linePos && e.linePos.length > 0) {
         line = e.linePos[0].line;
         col = e.linePos[0].col;
     } else if (e.mark) {
-        // js-yaml style fallback
-        line = e.mark.line;
-        col = e.mark.column;
+        // js-yaml style fallback (0-indexed)
+        line = e.mark.line + 1;
+        col = e.mark.column + 1;
     }
 
-    const lineNum = line + 1;
-    const colNum = col + 1;
+    const lineNum = line;
+    const colNum = col;
 
-    const startLine = Math.max(0, line - 2);
-    const endLine = Math.min(lines.length, line + 3);
+    const lineIdx = line - 1;  // 0-indexed for array access
+    const colIdx = col - 1;
+    const startLine = Math.max(0, lineIdx - 2);
+    const endLine = Math.min(lines.length, lineIdx + 3);
 
     let html = `<div class="error-item">
         <span class="error-icon">✕</span>
@@ -80,11 +93,11 @@ function showError(e, input) {
             <div style="background:#f8fafc;border-radius:6px;padding:8px 12px;margin-top:6px;font-family:monospace;font-size:12px;">`;
 
     for (let i = startLine; i < endLine; i++) {
-        const bg = i === line ? '#fef2f2' : 'transparent';
-        const prefix = i === line ? '→ ' : '  ';
+        const bg = i === lineIdx ? '#fef2f2' : 'transparent';
+        const prefix = i === lineIdx ? '→ ' : '  ';
         html += `<div style="background:${bg};padding:1px 0;">${prefix}${String(i + 1).padStart(2)}: ${escapeHtml(lines[i] || '')}</div>`;
-        if (i === line && col > 0) {
-            html += `<div style="color:#ef4444;padding-left:48px;">${' '.repeat(col)}^</div>`;
+        if (i === lineIdx && colIdx > 0) {
+            html += `<div style="color:#ef4444;padding-left:48px;">${' '.repeat(colIdx)}^</div>`;
         }
     }
 
@@ -101,8 +114,8 @@ function escapeHtml(str) {
 }
 
 function validateYaml() {
-    const input = inputEl.value.trim();
-    if (!input) {
+    const input = inputEl.value.trimEnd();
+    if (!input.trim()) {
         clearOutput();
         return;
     }
@@ -124,15 +137,16 @@ function validateYaml() {
 }
 
 function minifyYaml() {
-    const input = inputEl.value.trim();
-    if (!input) return;
+    const input = inputEl.value.trimEnd();
+    if (!input.trim()) return;
     try {
         const doc = YAML.parseDocument(input);
         if (doc.errors.length > 0) {
             throw doc.errors[0];
         }
-        // minify: no comments, compact flow style
-        const minified = doc.toString({ lineWidth: 0, minContentWidth: 0, indent: 0 });
+        // parse + stringify strips comments; lineWidth: 0 for compact output
+        const data = YAML.parse(input);
+        const minified = YAML.stringify(data, { lineWidth: 0, minContentWidth: 0 });
         outputEl.textContent = minified;
         updateLineNumbers(minified);
         errorList.innerHTML = '';
@@ -152,6 +166,7 @@ function copyOutput() {
 
 function clearAll() {
     inputEl.value = '';
+    updateInputLines();
     clearOutput();
     showStatus(true, '等待输入');
 }
@@ -188,5 +203,6 @@ features:
     max_requests: 100
     window_seconds: 60
   experimental: false`;
+    updateInputLines();
     formatYaml();
 }
