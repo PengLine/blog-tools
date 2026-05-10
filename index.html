@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,14 +17,18 @@
             --card-bg: #ffffff;
             --border: #e2e8f0;
             --hover-bg: #f8fafc;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
             --radius: 12px;
             --transition: 0.2s ease;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -177,7 +182,7 @@
             height: 42px;
             border-radius: 50%;
             background: #fff;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.04);
             cursor: pointer;
             z-index: 99;
             display: flex;
@@ -196,7 +201,7 @@
         }
 
         .sidebar-float-ball:hover {
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.06);
             transform: scale(1.08);
         }
 
@@ -235,7 +240,7 @@
             transition: margin-left 0.3s ease;
         }
 
-        .sidebar.collapsed ~ .main {
+        .sidebar.collapsed~.main {
             margin-left: 0;
         }
 
@@ -255,7 +260,7 @@
             top: -80px;
             width: 300px;
             height: 300px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 50%;
         }
 
@@ -266,7 +271,7 @@
             bottom: -60px;
             width: 200px;
             height: 200px;
-            background: rgba(255,255,255,0.04);
+            background: rgba(255, 255, 255, 0.04);
             border-radius: 50%;
         }
 
@@ -324,10 +329,21 @@
             flex-shrink: 0;
         }
 
-        .stat-icon.blue { background: #eef2ff; }
-        .stat-icon.green { background: #ecfdf5; }
-        .stat-icon.amber { background: #fffbeb; }
-        .stat-icon.purple { background: #faf5ff; }
+        .stat-icon.blue {
+            background: #eef2ff;
+        }
+
+        .stat-icon.green {
+            background: #ecfdf5;
+        }
+
+        .stat-icon.amber {
+            background: #fffbeb;
+        }
+
+        .stat-icon.purple {
+            background: #faf5ff;
+        }
 
         .stat-info .stat-value {
             font-size: 22px;
@@ -396,12 +412,29 @@
             font-size: 18px;
         }
 
-        .category-icon.img { background: #dbeafe; }
-        .category-icon.video { background: #fce7f3; }
-        .category-icon.data { background: #d1fae5; }
-        .category-icon.dev { background: #ede9fe; }
-        .category-icon.doc { background: #fef3c7; }
-        .category-icon.dl { background: #e0e7ff; }
+        .category-icon.img {
+            background: #dbeafe;
+        }
+
+        .category-icon.video {
+            background: #fce7f3;
+        }
+
+        .category-icon.data {
+            background: #d1fae5;
+        }
+
+        .category-icon.dev {
+            background: #ede9fe;
+        }
+
+        .category-icon.doc {
+            background: #fef3c7;
+        }
+
+        .category-icon.dl {
+            background: #e0e7ff;
+        }
 
         .category-title {
             font-size: 22px;
@@ -485,11 +518,13 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0, 0, 0, 0.4);
             z-index: 90;
         }
 
-        .sidebar-overlay.show { display: block; }
+        .sidebar-overlay.show {
+            display: block;
+        }
 
         /* ========== Responsive ========== */
         @media (max-width: 768px) {
@@ -502,17 +537,29 @@
                 transform: translateX(0);
             }
 
-            .sidebar-toggle { display: flex; }
+            .sidebar-toggle {
+                display: flex;
+            }
 
             .sidebar-float-ball {
                 display: none;
             }
 
-            .main { margin-left: 0; }
+            .main {
+                margin-left: 0;
+            }
 
-            .hero { padding: 32px 20px; }
-            .hero h1 { font-size: 24px; }
-            .content { padding: 24px 16px; }
+            .hero {
+                padding: 32px 20px;
+            }
+
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 24px 16px;
+            }
 
             .stats-row {
                 flex-wrap: wrap;
@@ -535,8 +582,61 @@
                 flex: 1 1 100%;
             }
         }
+
+        /* ========== Right Ad Sidebar ========== */
+        .ad-sidebar-right {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100vh;
+            z-index: 50;
+            padding: 0 12px;
+            display: flex;
+            flex-direction: column;
+            pointer-events: none;
+        }
+
+        .ad-sidebar-right .ad-slot {
+            flex: 1;
+            background: var(--card-bg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            position: relative;
+        }
+
+        .ad-sidebar-right .ad-slot:first-child {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ad-sidebar-right .ad-label {
+            font-size: 11px;
+            color: #94a3b8;
+            text-align: center;
+            padding: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        @media (min-width: 1400px) {
+            .main {
+                margin-right: 300px;
+            }
+        }
+
+        @media (max-width: 1399px) {
+            .ad-sidebar-right {
+                display: none;
+            }
+        }
     </style>
+
+    <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
 </head>
+
 <body>
     <!-- Sidebar toggle (mobile) -->
     <button class="sidebar-toggle" id="sidebarToggle">☰</button>
@@ -760,6 +860,24 @@
         </div>
     </main>
 
+    <!-- Right Ad Sidebar -->
+    <aside class="ad-sidebar-right">
+        <div class="ad-slot">
+            <span class="ad-label">ADVERTISEMENT</span>
+            <amp-ad width="100vw" height="320" type="adsense" data-ad-client="ca-pub-2048978820706528"
+                data-ad-slot="3069419028" data-auto-format="rspv" data-full-width="">
+                <div overflow=""></div>
+            </amp-ad>
+        </div>
+        <div class="ad-slot">
+            <span class="ad-label">ADVERTISEMENT</span>
+            <amp-ad width="100vw" height="320" type="adsense" data-ad-client="ca-pub-2048978820706528"
+                data-ad-slot="1947909041" data-auto-format="rspv" data-full-width="">
+                <div overflow=""></div>
+            </amp-ad>
+        </div>
+    </aside>
+
     <script src="common/js/nav.js"></script>
     <script>
         // Mobile sidebar toggle
@@ -791,4 +909,5 @@
         });
     </script>
 </body>
+
 </html>
