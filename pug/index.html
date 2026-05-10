@@ -3,18 +3,20 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="YAML在线格式化校验工具, YAML语法检查, YAML格式化高亮, 详细错误行定位, 免费在线YAML工具, YAML压缩">
-    <meta name="keywords" content="YAML格式化, YAML在线校验, YAML语法检查, YAML在线格式化, YAML压缩, YAML错误定位, 免费YAML工具, YAML validator">
+    <meta name="description" content="Pug在线格式化工具, Pug语法校验, Pug代码美化, 免费在线Pug格式化, Pug压缩, Pug错误定位, Jade格式化">
+    <meta name="keywords" content="Pug格式化, Pug在线校验, Pug代码美化, Pug在线格式化, Pug压缩, Jade格式化, 免费Pug工具, Pug beautify">
     <meta name="author" content="余一叶知秋尽">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YAML在线格式化校验工具</title>
+    <title>Pug在线格式化校验工具</title>
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="../common/css/style.css">
     <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
     <script type="module">
-        import * as YAML from 'https://esm.sh/yaml@2';
-        window.YAML = YAML;
+        import pugBeautify from 'https://esm.sh/@johnsoncodehk/pug-beautify@0.2.2';
+        import * as pug from 'https://esm.sh/pug@3';
+        window.pugBeautify = pugBeautify;
+        window.pug = pug;
     </script>
     <script src="script.js" defer></script>
 </head>
@@ -51,10 +53,10 @@
             <a href="../json/index.html">
                 <span class="nav-icon">{ }</span>JSON 格式化
             </a>
-            <a href="../yaml/index.html" class="active">
+            <a href="../yaml/index.html">
                 <span class="nav-icon">⚙️</span>YAML 格式化
             </a>
-            <a href="../pug/index.html">
+            <a href="../pug/index.html" class="active">
                 <span class="nav-icon">🌿</span>Pug 格式化
             </a>
             <a href="../pwd/index.html">
@@ -85,8 +87,8 @@
 
     <main class="main">
         <section class="page-hero">
-            <h1>YAML 格式化校验工具</h1>
-            <p>在线 YAML 格式化、语法校验、压缩，精确指出错误行号与上下文，纯前端运行保护数据安全</p>
+            <h1>Pug 格式化校验工具</h1>
+            <p>在线 Pug 代码格式化、语法校验、压缩，基于 pug-beautify 美化和 pug 编译器校验，纯前端运行保护数据安全</p>
         </section>
         <div class="top-ad">
             <amp-ad width="970" height="90" type="adsense"
@@ -97,14 +99,14 @@
         </div>
         <div class="container">
             <div class="tool-header">
-                <h2>YAML 编辑器</h2>
+                <h2>Pug 编辑器</h2>
                 <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
                     <span id="status-badge" class="success-badge">等待输入</span>
                     <div class="button-group">
                         <button class="btn" onclick="loadSample()">示例数据</button>
-                        <button class="btn primary" onclick="formatYaml()">格式化</button>
-                        <button class="btn" onclick="validateYaml()">校验语法</button>
-                        <button class="btn" onclick="minifyYaml()">压缩</button>
+                        <button class="btn primary" onclick="formatPug()">格式化</button>
+                        <button class="btn" onclick="validatePug()">校验语法</button>
+                        <button class="btn" onclick="minifyPug()">压缩</button>
                         <button class="btn" onclick="copyOutput()">复制结果</button>
                         <button class="btn" onclick="clearAll()">清空</button>
                     </div>
@@ -113,11 +115,11 @@
 
             <div class="editor-panel">
                 <div class="panel">
-                    <div class="panel-header">输入 YAML</div>
+                    <div class="panel-header">输入 Pug</div>
                     <div class="panel-body">
                         <div class="input-with-lines">
                             <div class="line-numbers" id="input-lines"><span>1</span></div>
-                            <textarea id="yaml-input" placeholder="请在此输入 YAML 内容，或点击「示例数据」查看效果..."></textarea>
+                            <textarea id="pug-input" placeholder="请在此输入 Pug 内容，或点击「示例数据」查看效果..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -126,7 +128,7 @@
                     <div class="panel-body">
                         <div class="output-with-lines">
                             <div class="line-numbers" id="output-lines"><span></span></div>
-                            <div class="output-content" id="yaml-output"></div>
+                            <div class="output-content" id="pug-output"></div>
                         </div>
                     </div>
                 </div>
