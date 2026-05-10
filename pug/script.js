@@ -40,6 +40,11 @@ inputEl.addEventListener('scroll', () => {
     inputLines.scrollTop = inputEl.scrollTop;
 });
 
+function checkPugSyntax(input) {
+    const tokens = pugLexer(input);
+    pugParser(tokens);
+}
+
 function formatPug() {
     const input = inputEl.value.trimEnd();
     if (!input.trim()) {
@@ -48,7 +53,7 @@ function formatPug() {
     }
 
     try {
-        pug.compile(input);
+        checkPugSyntax(input);
         const formatted = pugBeautify(input, { fill_tab: false, tab_size: 2 });
         outputEl.textContent = formatted;
         updateLineNumbers(formatted);
@@ -110,7 +115,7 @@ function validatePug() {
     }
 
     try {
-        pug.compile(input);
+        checkPugSyntax(input);
         clearError();
         showStatus(true, 'Pug 语法正确，无错误');
     } catch (e) {
@@ -125,7 +130,7 @@ function minifyPug() {
     const input = inputEl.value.trimEnd();
     if (!input.trim()) return;
     try {
-        pug.compile(input);
+        checkPugSyntax(input);
         const formatted = pugBeautify(input, { fill_tab: false, tab_size: 2 });
         const minified = formatted.replace(/\n{2,}/g, '\n').trim();
         outputEl.textContent = minified;

@@ -14,9 +14,11 @@
     <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
     <script type="module">
         import pugBeautify from 'https://esm.sh/@johnsoncodehk/pug-beautify@0.2.2';
-        import * as pug from 'https://esm.sh/pug@3';
+        import pugLexer from 'https://esm.sh/pug-lexer@5';
+        import pugParser from 'https://esm.sh/pug-parser@6';
         window.pugBeautify = pugBeautify;
-        window.pug = pug;
+        window.pugLexer = pugLexer;
+        window.pugParser = pugParser;
     </script>
     <script src="script.js" defer></script>
 </head>
