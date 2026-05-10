@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="Mermaid在线UML画图工具,免费在线UML画图工具,支持流程图、时序图、状态图、类图、实体关系图、饼图、甘特图、用户旅程图等。">
-	<meta name="keywords" content="Mermaid在线UML画图工具, 免费在线UML画图工具, 在线UML画图工具, 免费UML画图工具,Mermaid流程图,Mermaid实体关系图,Mermaid饼图,Mermaid甘特图,Mermaid用户旅程图,Mermaid类图,Mermaid时序图,Mermaid状态图">
-	<meta name="author" content="余一叶知秋尽">
+    <meta name="keywords"
+        content="Mermaid在线UML画图工具, 免费在线UML画图工具, 在线UML画图工具, 免费UML画图工具,Mermaid流程图,Mermaid实体关系图,Mermaid饼图,Mermaid甘特图,Mermaid用户旅程图,Mermaid类图,Mermaid时序图,Mermaid状态图">
+    <meta name="author" content="余一叶知秋尽">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mermaid在线UML画图工具，免费在线UML画图工具</title>
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="../../common/css/style.css">
+    <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
 </head>
+
 <body>
     <aside class="sidebar">
         <div class="sidebar-brand">
@@ -70,86 +74,94 @@
         </div>
     </aside>
     <main class="main">
-    <div class="container">
-        <h1>Mermaid 在线画 UML 图</h1>
-        <p class="description">
-            下面为所有支持的图表类型，包含简单的语法，以及实际电商示例的复杂图表，点击即可切换。 图表支持<b style="color: #007bff;">主题色切换、全屏、滚轮放大、拖动</b>。
-        </p>
-        
-        <div class="chart-types">
-            <div class="chart-buttons">
-                <button class="chart-btn" data-type="custom">自定义</button>
-                <button class="chart-btn" data-type="flowchart">流程图</button>
-                <button class="chart-btn" data-type="sequence">时序图</button>
-                <button class="chart-btn" data-type="state">状态图</button>
-                <button class="chart-btn" data-type="class">类图</button>
-                <button class="chart-btn" data-type="er">实体关系图</button>
-                <button class="chart-btn" data-type="pie">饼图</button>
-                <button class="chart-btn" data-type="gantt">甘特图</button>
-                <button class="chart-btn" data-type="journey">用户旅程图</button>
-            </div>
+        <section class="page-hero">
+            <h1>Mermaid 在线画 UML 图</h1>
+            <p>下面为所有支持的图表类型，包含简单的语法，以及实际电商示例的复杂图表，点击即可切换。</p>
+            <p>图表支持<b style="color: #007bff;">主题色切换、全屏、滚轮放大、拖动</b>。</p>
+        </section>
+        <div class="top-ad">
+            <amp-ad width="970" height="90" type="adsense" data-ad-client="ca-pub-2048978820706528"
+                data-ad-slot="5319728132" data-auto-format="rspv" data-full-width="" layout="responsive">
+                <div overflow=""></div>
+            </amp-ad>
         </div>
-        <div class="chart-examples">
-            <div class="chart-buttons">
-                <h3>电商示例图表：</h3>
-                <button class="chart-btn" data-type="order_flowchart">订单流程图</button>
-                <button class="chart-btn" data-type="order_sequence">订单时序图</button>
-                <button class="chart-btn" data-type="api_sequence">请求时序图</button>
-                <button class="chart-btn" data-type="order_state">订单状态图</button>
-                <button class="chart-btn" data-type="order_class">订单类图</button>
-                <button class="chart-btn" data-type="order_er">订单实体关系图</button>
-                <button class="chart-btn" data-type="order_pie">商品分类饼图</button>
-                <button class="chart-btn" data-type="order_gantt">订单甘特图</button>
-                <button class="chart-btn" data-type="order_journey">用户购物旅程图</button>
-            </div>
-        </div>
-        
-        <div class="editor-container">
-            <div class="input-section">
-                <div class="section-header">
-                    <h2>Mermaid 语法代码</h2>
-                    <button id="copy-btn">复制</button>
-                    <button id="clear-btn">清空</button>
+        <div class="container">
+
+            <div class="chart-types">
+                <div class="chart-buttons">
+                    <button class="chart-btn" data-type="custom">自定义</button>
+                    <button class="chart-btn" data-type="flowchart">流程图</button>
+                    <button class="chart-btn" data-type="sequence">时序图</button>
+                    <button class="chart-btn" data-type="state">状态图</button>
+                    <button class="chart-btn" data-type="class">类图</button>
+                    <button class="chart-btn" data-type="er">实体关系图</button>
+                    <button class="chart-btn" data-type="pie">饼图</button>
+                    <button class="chart-btn" data-type="gantt">甘特图</button>
+                    <button class="chart-btn" data-type="journey">用户旅程图</button>
                 </div>
-                <textarea id="mermaid-input" placeholder="请输入Mermaid语法代码，例如：
+            </div>
+            <div class="chart-examples">
+                <div class="chart-buttons">
+                    <h3>电商示例图表：</h3>
+                    <button class="chart-btn" data-type="order_flowchart">订单流程图</button>
+                    <button class="chart-btn" data-type="order_sequence">订单时序图</button>
+                    <button class="chart-btn" data-type="api_sequence">请求时序图</button>
+                    <button class="chart-btn" data-type="order_state">订单状态图</button>
+                    <button class="chart-btn" data-type="order_class">订单类图</button>
+                    <button class="chart-btn" data-type="order_er">订单实体关系图</button>
+                    <button class="chart-btn" data-type="order_pie">商品分类饼图</button>
+                    <button class="chart-btn" data-type="order_gantt">订单甘特图</button>
+                    <button class="chart-btn" data-type="order_journey">用户购物旅程图</button>
+                </div>
+            </div>
+
+            <div class="editor-container">
+                <div class="input-section">
+                    <div class="section-header">
+                        <h2>Mermaid 语法代码</h2>
+                        <button id="copy-btn">复制</button>
+                        <button id="clear-btn">清空</button>
+                    </div>
+                    <textarea id="mermaid-input" placeholder="请输入Mermaid语法代码，例如：
 flowchart LR
     A[Hard] -->|Text| B(Round)
     B --> C{Decision}
     C -->|One| D[Result 1]
     C -->|Two| E[Result 2]">
 </textarea>
-            </div>
-            
-            <div class="preview-section">
-                <div class="section-header">
-                <h2>预览图</h2>
-                <div class="theme-selector">
-                    <div class="theme-circle" data-theme="default" style="background-color: #F0F0F0;"></div>
-                    <div class="theme-circle" data-theme="white" style="background-color: #fafafaff;"></div>
-                    <div class="theme-circle" data-theme="gray" style="background-color: #e6ededff;"></div>
-                    <div class="theme-circle" data-theme="shallow" style="background-color: #c7eeed;"></div>
-                    <div class="theme-circle" data-theme="blue" style="background-color: #8ba2ebff;"></div>
-                    <div class="theme-circle" data-theme="yellow" style="background-color: #bcb58aff;"></div>
-                    <div class="theme-circle" data-theme="purple" style="background-color: #c1b1e0ff;"></div>
-                    <div class="theme-circle" data-theme="forest" style="background-color: #80c79eff;"></div>
-                    <div class="theme-circle" data-theme="fire" style="background-color: #d9a49fff;"></div>
-                    <div class="theme-circle" data-theme="dark" style="background-color: #2c3e50;"></div>
                 </div>
-                <button id="zoom-btn">全屏</button>
-                <button id="download-btn">下载</button>
-            </div>
-                <div id="mermaid-preview"></div>
+
+                <div class="preview-section">
+                    <div class="section-header">
+                        <h2>预览图</h2>
+                        <div class="theme-selector">
+                            <div class="theme-circle" data-theme="default" style="background-color: #F0F0F0;"></div>
+                            <div class="theme-circle" data-theme="white" style="background-color: #fafafaff;"></div>
+                            <div class="theme-circle" data-theme="gray" style="background-color: #e6ededff;"></div>
+                            <div class="theme-circle" data-theme="shallow" style="background-color: #c7eeed;"></div>
+                            <div class="theme-circle" data-theme="blue" style="background-color: #8ba2ebff;"></div>
+                            <div class="theme-circle" data-theme="yellow" style="background-color: #bcb58aff;"></div>
+                            <div class="theme-circle" data-theme="purple" style="background-color: #c1b1e0ff;"></div>
+                            <div class="theme-circle" data-theme="forest" style="background-color: #80c79eff;"></div>
+                            <div class="theme-circle" data-theme="fire" style="background-color: #d9a49fff;"></div>
+                            <div class="theme-circle" data-theme="dark" style="background-color: #2c3e50;"></div>
+                        </div>
+                        <button id="zoom-btn">全屏</button>
+                        <button id="download-btn">下载</button>
+                    </div>
+                    <div id="mermaid-preview"></div>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <!-- 自定义提示框 -->
-    <div id="toast" class="toast"></div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script src="script.js"></script>
-    <script src="example.js"></script>
+
+        <!-- 自定义提示框 -->
+        <div id="toast" class="toast"></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+        <script src="script.js"></script>
+        <script src="example.js"></script>
     </main>
-  <script src="../../common/js/nav.js"></script>
+    <script src="../../common/js/nav.js"></script>
 </body>
+
 </html>

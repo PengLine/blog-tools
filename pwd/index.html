@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>随机密码生成工具 - 工具系统</title>
+    <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
     <style>
         @import '../common/css/style.css';
         @import '../common/css/utils.css';
@@ -15,7 +17,7 @@
             margin: 0 auto;
             padding: 60px 24px;
         }
-        
+
         /* 工具卡片样式 */
         .tool-card {
             background-color: white;
@@ -25,22 +27,22 @@
             max-width: 800px;
             margin: 0 auto;
         }
-        
+
         .form-group {
             margin-bottom: 24px;
         }
-        
+
         .form-row {
             display: flex;
             gap: 24px;
             margin-bottom: 24px;
         }
-        
+
         .form-group.half {
             flex: 1;
             margin-bottom: 0;
         }
-        
+
         .form-group label {
             display: block;
             font-size: 14px;
@@ -48,7 +50,7 @@
             color: #2c3e50;
             margin-bottom: 8px;
         }
-        
+
         .form-group input[type="number"],
         .form-group input[type="text"] {
             width: 100%;
@@ -58,42 +60,42 @@
             font-size: 16px;
             transition: border-color 0.3s;
         }
-        
+
         .form-group input[type="number"]:focus,
         .form-group input[type="text"]:focus {
             outline: none;
             border-color: #3498db;
         }
-        
+
         .custom-symbols-input {
             font-family: 'Courier New', monospace;
             letter-spacing: 1px;
         }
-        
+
         .checkbox-group {
             display: flex;
             flex-wrap: wrap;
             gap: 16px;
             margin-bottom: 24px;
         }
-        
+
         .checkbox-item {
             display: flex;
             align-items: center;
         }
-        
+
         .checkbox-item input[type="checkbox"] {
             margin-right: 8px;
             width: 16px;
             height: 16px;
         }
-        
+
         .checkbox-item label {
             font-size: 14px;
             color: #555;
             font-weight: 400;
         }
-        
+
         .btn {
             display: inline-block;
             background-color: #3498db;
@@ -108,11 +110,11 @@
             width: 100%;
             margin-bottom: 16px;
         }
-        
+
         .btn:hover {
             background-color: #2980b9;
         }
-        
+
         .result {
             margin-top: 32px;
             padding: 24px;
@@ -120,14 +122,14 @@
             border-radius: 8px;
             border: 1px solid #eaeaea;
         }
-        
+
         .result h3 {
             font-size: 16px;
             font-weight: 600;
             color: #2c3e50;
             margin-bottom: 12px;
         }
-        
+
         .result-content {
             background-color: white;
             padding: 16px;
@@ -138,13 +140,13 @@
             font-family: 'Courier New', monospace;
             font-size: 14px;
         }
-        
+
         .result-content.single {
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        
+
         .password-item {
             padding: 8px 0;
             border-bottom: 1px solid #f0f0f0;
@@ -152,14 +154,15 @@
             align-items: flex-start;
             position: relative;
         }
-        
+
         .password-item .password-text {
             flex: 1;
-            margin-right: 80px; /* 为按钮预留空间 */
+            margin-right: 80px;
+            /* 为按钮预留空间 */
             word-break: break-all;
             overflow: hidden;
         }
-        
+
         .password-item .copy-single-btn {
             flex-shrink: 0;
             align-self: flex-start;
@@ -167,16 +170,16 @@
             position: absolute;
             right: 0;
         }
-        
+
         .password-item:last-child {
             border-bottom: none;
         }
-        
+
         .password-text {
             flex: 1;
             margin-right: 12px;
         }
-        
+
         .copy-single-btn {
             background-color: #3498db;
             color: white;
@@ -187,26 +190,26 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        
+
         .copy-single-btn:hover {
             background-color: #2980b9;
         }
-        
+
         .copy-single-btn.copied {
             background-color: #27ae60;
         }
-        
+
         .copy-btn {
             background-color: #27ae60;
             padding: 8px 16px;
             font-size: 14px;
             border-radius: 6px;
         }
-        
+
         .copy-btn:hover {
             background-color: #229954;
         }
-        
+
         .message {
             margin-top: 12px;
             padding: 12px;
@@ -214,18 +217,18 @@
             font-size: 14px;
             display: none;
         }
-        
+
         .message.success {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
             display: block;
         }
-        
+
         .strength-indicator {
             margin-top: 16px;
         }
-        
+
         .strength-bar {
             height: 8px;
             background-color: #eaeaea;
@@ -233,18 +236,18 @@
             overflow: hidden;
             margin-bottom: 8px;
         }
-        
+
         .strength-fill {
             height: 100%;
             transition: width 0.3s, background-color 0.3s;
             border-radius: 4px;
         }
-        
+
         .strength-text {
             font-size: 12px;
             color: #7f8c8d;
         }
-        
+
         /* 页脚样式 */
         .footer {
             background-color: #2c3e50;
@@ -252,45 +255,46 @@
             padding: 48px 0;
             margin-top: 60px;
         }
-        
+
         .footer-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 24px;
             text-align: center;
         }
-        
+
         .footer p {
             font-size: 14px;
             opacity: 0.8;
         }
-        
+
         /* 响应式设计 */
         @media (max-width: 768px) {
             .container {
                 padding: 40px 16px;
             }
-            
+
             .tool-card {
                 padding: 24px;
             }
-            
+
             .checkbox-group {
                 flex-direction: column;
                 gap: 12px;
             }
-            
+
             .form-row {
                 flex-direction: column;
                 gap: 24px;
             }
-            
+
             .form-group.half {
                 margin-bottom: 24px;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- 侧边导航栏 -->
     <aside class="sidebar">
@@ -352,83 +356,86 @@
 
     <!-- 主内容 -->
     <main class="main">
-    <!-- 英雄区域 -->
-    <section class="hero">
-        <div class="hero-container">
+        <section class="page-hero">
             <h1>随机密码生成工具</h1>
             <p>生成安全、随机的密码，保护您的账户安全</p>
+        </section>
+        <div class="top-ad">
+            <amp-ad width="970" height="90" type="adsense" data-ad-client="ca-pub-2048978820706528"
+                data-ad-slot="9267161710" data-auto-format="rspv" data-full-width="" layout="responsive">
+            </amp-ad>
         </div>
-    </section>
-    
-    <div class="container">
-        <div class="tool-card">
-            <div class="form-row">
-                <div class="form-group half">
-                    <label for="password-length">密码长度（字符）</label>
-                    <input type="number" id="password-length" min="6" max="20" value="16" data-name="密码长度">
+
+        <div class="container">
+            <div class="tool-card">
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="password-length">密码长度（字符）</label>
+                        <input type="number" id="password-length" min="6" max="20" value="16" data-name="密码长度">
+                    </div>
+
+                    <div class="form-group half">
+                        <label for="password-count">生成数量（个）</label>
+                        <input type="number" id="password-count" min="1" max="20" value="1" data-name="生成数量">
+                    </div>
                 </div>
-                
-                <div class="form-group half">
-                    <label for="password-count">生成数量（个）</label>
-                    <input type="number" id="password-count" min="1" max="20" value="1" data-name="生成数量">
+
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="include-uppercase" checked>
+                        <label for="include-uppercase">包含大写字母</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="include-lowercase" checked>
+                        <label for="include-lowercase">包含小写字母</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="include-numbers" checked>
+                        <label for="include-numbers">包含数字</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="include-symbols" checked>
+                        <label for="include-symbols">包含特殊字符</label>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="checkbox-group">
-                <div class="checkbox-item">
-                    <input type="checkbox" id="include-uppercase" checked>
-                    <label for="include-uppercase">包含大写字母</label>
+
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="custom-symbols">自定义特殊字符</label>
+                        <input type="text" id="custom-symbols" placeholder="留空使用默认：!@#$%&*_+-=;:,." value=""
+                            class="custom-symbols-input">
+                    </div>
+
+                    <div class="form-group half">
+                        <label for="min-symbols">至少包含的特殊字符数量（个）</label>
+                        <input type="number" id="min-symbols" min="1" max="10" value="4" data-name="特殊字符数量">
+                    </div>
                 </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="include-lowercase" checked>
-                    <label for="include-lowercase">包含小写字母</label>
+
+                <button class="btn" onclick="generatePassword()">生成密码</button>
+
+                <div class="strength-indicator">
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strength-fill"></div>
+                    </div>
+                    <div class="strength-text" id="strength-text">密码强度：中等</div>
                 </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="include-numbers" checked>
-                    <label for="include-numbers">包含数字</label>
+
+                <div class="result">
+                    <h3>生成结果</h3>
+                    <div class="result-content" id="password-result"></div>
+                    <button class="btn copy-btn" onclick="copyToClipboard()">一键复制全部密码</button>
+                    <div class="message" id="message"></div>
                 </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="include-symbols" checked>
-                    <label for="include-symbols">包含特殊字符</label>
-                </div>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group half">
-                    <label for="custom-symbols">自定义特殊字符</label>
-                    <input type="text" id="custom-symbols" placeholder="留空使用默认：!@#$%&*_+-=;:,." value="" class="custom-symbols-input">
-                </div>
-                
-                <div class="form-group half">
-                    <label for="min-symbols">至少包含的特殊字符数量（个）</label>
-                    <input type="number" id="min-symbols" min="1" max="10" value="4" data-name="特殊字符数量">
-                </div>
-            </div>
-            
-            <button class="btn" onclick="generatePassword()">生成密码</button>
-            
-            <div class="strength-indicator">
-                <div class="strength-bar">
-                    <div class="strength-fill" id="strength-fill"></div>
-                </div>
-                <div class="strength-text" id="strength-text">密码强度：中等</div>
-            </div>
-            
-            <div class="result">
-                <h3>生成结果</h3>
-                <div class="result-content" id="password-result"></div>
-                <button class="btn copy-btn" onclick="copyToClipboard()">一键复制全部密码</button>
-                <div class="message" id="message"></div>
             </div>
         </div>
-    </div>
-    
-    <!-- 页脚 -->
-    <footer class="footer">
-        <div class="footer-container">
-            <p>&copy; 2026 工具系统. 保留所有权利.</p>
-        </div>
-    </footer>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="footer-container">
+                <p>&copy; 2026 工具系统. 保留所有权利.</p>
+            </div>
+        </footer>
     </main>
 
     <script src="../common/js/utils.js"></script>
@@ -443,34 +450,34 @@
             const includeSymbols = document.getElementById('include-symbols').checked;
             const customSymbols = document.getElementById('custom-symbols').value;
             const minSymbols = parseInt(document.getElementById('min-symbols').value);
-            
+
             // 验证输入范围
             const passwordLengthInput = document.getElementById('password-length');
             const passwordCountInput = document.getElementById('password-count');
             const minSymbolsInput = document.getElementById('min-symbols');
-            
+
             if (!utils.validateInput(passwordLengthInput)) return;
             if (!utils.validateInput(passwordCountInput)) return;
             if (!utils.validateInput(minSymbolsInput)) return;
-            
+
             // 验证输入
             if (includeSymbols && minSymbols > length) {
                 utils.showError('特殊字符数量不能大于密码长度');
                 return;
             }
-            
+
             let uppercaseChars = includeUppercase ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' : '';
             let lowercaseChars = includeLowercase ? 'abcdefghijklmnopqrstuvwxyz' : '';
             let numberChars = includeNumbers ? '0123456789' : '';
             let symbolChars = includeSymbols ? (customSymbols || '!@#$%&*_+-=;:,.') : '';
-            
+
             let allChars = uppercaseChars + lowercaseChars + numberChars + symbolChars;
-            
+
             if (allChars === '') {
                 utils.showError('请至少选择一种字符类型');
                 return;
             }
-            
+
             // 收集启用的字符类型
             const enabledTypes = [];
             if (includeUppercase && uppercaseChars) enabledTypes.push(uppercaseChars);
@@ -528,14 +535,14 @@
                 }
                 passwords.push(chars.join(''));
             }
-            
+
             // HTML转义函数
             function escapeHtml(text) {
                 const div = document.createElement('div');
                 div.textContent = text;
                 return div.innerHTML;
             }
-            
+
             const passwordResult = document.getElementById('password-result');
             if (count > 1) {
                 passwordResult.className = 'result-content';
@@ -546,28 +553,28 @@
                 updateStrengthIndicator(passwords[0]);
             }
         }
-        
+
         // 复制单个密码
         function copySinglePassword(button) {
             const passwordText = button.previousElementSibling.textContent;
-            
-            navigator.clipboard.writeText(passwordText).then(function() {
+
+            navigator.clipboard.writeText(passwordText).then(function () {
                 const originalText = button.textContent;
                 button.textContent = '已复制';
                 button.classList.add('copied');
-                
-                setTimeout(function() {
+
+                setTimeout(function () {
                     button.textContent = originalText;
                     button.classList.remove('copied');
                 }, 2000);
-                
+
                 utils.showSuccess('复制成功');
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error('复制失败:', err);
                 utils.showError('复制失败，请手动复制');
             });
         }
-        
+
         // 更新密码强度指示器
         function updateStrengthIndicator(password) {
             const length = password.length;
@@ -611,12 +618,12 @@
                 strengthText.textContent = '密码强度：极强';
             }
         }
-        
+
         // 复制到剪贴板
         function copyToClipboard() {
             const passwordResult = document.getElementById('password-result');
             const passwordItems = passwordResult.querySelectorAll('.password-item');
-            
+
             let textToCopy = '';
             if (passwordItems.length > 0) {
                 // 复制多个密码，每个密码占一行
@@ -633,43 +640,44 @@
                     textToCopy = passwordResult.textContent;
                 }
             }
-            
+
             if (!textToCopy) {
                 utils.showError('请先生成密码');
                 return;
             }
-            
-            navigator.clipboard.writeText(textToCopy).then(function() {
+
+            navigator.clipboard.writeText(textToCopy).then(function () {
                 utils.showSuccess('已复制到剪贴板！');
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error('复制失败:', err);
                 utils.showError('复制失败，请手动复制');
             });
         }
-        
+
         // 为输入框添加blur事件监听器
         document.getElementById('password-length').addEventListener('blur', validatePasswordLength);
         document.getElementById('password-count').addEventListener('blur', validatePasswordCount);
         document.getElementById('min-symbols').addEventListener('blur', validateMinSymbols);
-        
+
         // 验证密码长度
         function validatePasswordLength() {
             utils.validateInput(document.getElementById('password-length'));
         }
-        
+
         // 验证生成数量
         function validatePasswordCount() {
             utils.validateInput(document.getElementById('password-count'));
         }
-        
+
         // 验证特殊字符数量
         function validateMinSymbols() {
             utils.validateInput(document.getElementById('min-symbols'));
         }
-        
+
         // 初始生成
         generatePassword();
     </script>
-  <script src="../common/js/nav.js"></script>
+    <script src="../common/js/nav.js"></script>
 </body>
+
 </html>

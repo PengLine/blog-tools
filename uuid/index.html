@@ -1,72 +1,73 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UUID生成工具 - 工具系统</title>
+    <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
     <style>
         @import '../common/css/style.css';
         @import '../common/css/utils.css';
     </style>
     <style>
-        
         /* 工具区域 */
         .tools-section {
             padding: 50px 0;
         }
-        
+
         .tools-section h2 {
             text-align: center;
             font-size: 36px;
             margin-bottom: 48px;
             color: #2c3e50;
         }
-        
+
         .tool-card {
             background-color: white;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             padding: 20px;
             max-width: 1000px;
             margin: 0 auto 48px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .tool-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
-        
+
         .tool-card h3 {
             font-size: 24px;
             margin-bottom: 16px;
             color: #2c3e50;
             text-align: center;
         }
-        
+
         .tool-card p {
             margin-bottom: 24px;
             color: #555;
             text-align: center;
         }
-        
+
         .form-row {
             display: flex;
             gap: 16px;
             margin-bottom: 24px;
         }
-        
+
         .form-group {
             flex: 1;
         }
-        
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
             color: #2c3e50;
         }
-        
+
         .form-group input,
         .form-group select {
             width: 100%;
@@ -76,13 +77,13 @@
             font-size: 16px;
             transition: border-color 0.3s;
         }
-        
+
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
             border-color: #3498db;
         }
-        
+
         .btn {
             display: block;
             background-color: #3498db;
@@ -97,29 +98,29 @@
             margin: 0 auto;
             text-align: center;
         }
-        
+
         .btn:hover {
             background-color: #2980b9;
         }
-        
+
         .btn-secondary {
             background-color: #27ae60;
         }
-        
+
         .btn-secondary:hover {
             background-color: #219a52;
         }
-        
+
         .result-section {
             margin-top: 32px;
         }
-        
+
         .result-section h4 {
             font-size: 18px;
             margin-bottom: 16px;
             color: #2c3e50;
         }
-        
+
         .result-content {
             background-color: #f8f9fa;
             padding: 20px;
@@ -130,12 +131,12 @@
             font-family: 'Courier New', monospace;
             font-size: 14px;
         }
-        
+
         .result-content.single {
             display: flex;
             align-items: center;
         }
-        
+
         .password-item {
             padding: 8px 0;
             border-bottom: 1px solid #f0f0f0;
@@ -143,14 +144,15 @@
             align-items: flex-start;
             position: relative;
         }
-        
+
         .password-item .password-text {
             flex: 1;
-            margin-right: 80px; /* 为按钮预留空间 */
+            margin-right: 80px;
+            /* 为按钮预留空间 */
             word-break: break-all;
             overflow: hidden;
         }
-        
+
         .password-item .copy-single-btn {
             flex-shrink: 0;
             align-self: flex-start;
@@ -158,7 +160,7 @@
             position: absolute;
             right: 0;
         }
-        
+
         .copy-single-btn {
             background-color: #3498db;
             color: white;
@@ -169,24 +171,24 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        
+
         .copy-single-btn:hover {
             background-color: #2980b9;
         }
-        
+
         .message {
             margin-top: 12px;
             padding: 12px;
             border-radius: 6px;
             font-size: 14px;
         }
-        
+
         .message.success {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-        
+
         /* 页脚 */
         .footer {
             background-color: #2c3e50;
@@ -194,25 +196,26 @@
             padding: 40px 0;
             text-align: center;
         }
-        
+
         .footer p {
             margin: 0;
         }
-        
+
         /* 响应式设计 */
         @media (max-width: 768px) {
-            
-            
+
+
             .form-row {
                 flex-direction: column;
             }
-            
+
             .tool-card {
                 padding: 24px;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- 侧边导航栏 -->
     <aside class="sidebar">
@@ -274,87 +277,94 @@
 
     <!-- 主内容 -->
     <main class="main">
-    <!-- 英雄区域 -->
-    <section class="hero">
-        <div class="container">
+        <section class="page-hero">
             <h1>UUID生成工具</h1>
             <p>生成唯一标识符，适用于各种系统和应用场景，可自定义生成数量</p>
+        </section>
+        <div class="top-ad">
+            <amp-ad width="970" height="90" type="adsense" data-ad-client="ca-pub-2048978820706528"
+                data-ad-slot="7740281459" data-auto-format="rspv" data-full-width="" layout="responsive">
+            </amp-ad>
         </div>
-    </section>
 
-    <!-- 工具区域 -->
-    <section class="tools-section">
-        <div class="container">
-            <div class="tool-card">
-                <div class="form-row" style="align-items: flex-end;">
-                    <div class="form-group">
-                        <label for="uuid-count">生成数量</label>
-                        <input type="number" id="uuid-count" min="1" max="20" value="5" data-name="生成数量">
-                    </div>
-                    <div class="form-group" style="flex-shrink: 0;">
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">生成格式</label>
-                        <div style="display: flex; align-items: center; gap: 16px;">
-                            <div style="display: flex; align-items: center;">
-                                <input type="radio" id="uuid-format-standard" name="uuid-format" style="margin-right: 8px; width: 16px; height: 16px;">
-                                <label for="uuid-format-standard" style="font-size: 14px; color: #555; font-weight: 400;">带连字符</label>
-                            </div>
-                            <div style="display: flex; align-items: center;">
-                                <input type="radio" id="uuid-format-no-hyphen" name="uuid-format" checked style="margin-right: 8px; width: 16px; height: 16px;">
-                                <label for="uuid-format-no-hyphen" style="font-size: 14px; color: #555; font-weight: 400;">不带连字符</label>
+        <!-- 工具区域 -->
+        <section class="tools-section">
+            <div class="container">
+                <div class="tool-card">
+                    <div class="form-row" style="align-items: flex-end;">
+                        <div class="form-group">
+                            <label for="uuid-count">生成数量</label>
+                            <input type="number" id="uuid-count" min="1" max="20" value="5" data-name="生成数量">
+                        </div>
+                        <div class="form-group" style="flex-shrink: 0;">
+                            <label
+                                style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">生成格式</label>
+                            <div style="display: flex; align-items: center; gap: 16px;">
+                                <div style="display: flex; align-items: center;">
+                                    <input type="radio" id="uuid-format-standard" name="uuid-format"
+                                        style="margin-right: 8px; width: 16px; height: 16px;">
+                                    <label for="uuid-format-standard"
+                                        style="font-size: 14px; color: #555; font-weight: 400;">带连字符</label>
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <input type="radio" id="uuid-format-no-hyphen" name="uuid-format" checked
+                                        style="margin-right: 8px; width: 16px; height: 16px;">
+                                    <label for="uuid-format-no-hyphen"
+                                        style="font-size: 14px; color: #555; font-weight: 400;">不带连字符</label>
+                                </div>
                             </div>
                         </div>
+                        <button class="btn" onclick="generateUUIDs()">生成UUID</button>
                     </div>
-                    <button class="btn" onclick="generateUUIDs()">生成UUID</button>
-                </div>
-                
-                
-                <div class="result-section">
-                    <h4>生成结果</h4>
-                    <div id="uuid-result" class="result-content"></div>
-                    <button class="btn btn-secondary" onclick="copyAllUUIDs()">复制全部UUID</button>
-                    <div id="message" class="message"></div>
+
+
+                    <div class="result-section">
+                        <h4>生成结果</h4>
+                        <div id="uuid-result" class="result-content"></div>
+                        <button class="btn btn-secondary" onclick="copyAllUUIDs()">复制全部UUID</button>
+                        <div id="message" class="message"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-    
-    <!-- 页脚 -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 工具系统. 保留所有权利.</p>
-        </div>
-    </footer>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2026 工具系统. 保留所有权利.</p>
+            </div>
+        </footer>
     </main>
 
     <script src="../common/js/utils.js"></script>
     <script>
-        
+
         // 生成UUID函数
         function generateUUID(includeHyphen = true) {
-            const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
                 const r = Math.random() * 16 | 0;
                 const v = c === 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
             });
             return includeHyphen ? uuid : uuid.replace(/-/g, '');
         }
-        
+
         // 生成多个UUID
         function generateUUIDs() {
             const uuidCountInput = document.getElementById('uuid-count');
             const count = parseInt(uuidCountInput.value);
-            
+
             // 验证输入范围
             if (!utils.validateInput(uuidCountInput)) return;
-            
+
             const includeHyphen = document.getElementById('uuid-format-standard').checked;
             const uuidResult = document.getElementById('uuid-result');
-            
+
             let uuids = [];
             for (let i = 0; i < count; i++) {
                 uuids.push(generateUUID(includeHyphen));
             }
-            
+
             if (count > 1) {
                 uuidResult.className = 'result-content';
                 uuidResult.innerHTML = uuids.map(uuid => `<div class="password-item"><span class="password-text">${uuid}</span><button class="copy-single-btn" onclick="copySingleUUID(this)">复制</button></div>`).join('');
@@ -363,33 +373,33 @@
                 uuidResult.innerHTML = `<div class="password-item"><span class="password-text">${uuids[0]}</span><button class="copy-single-btn" onclick="copySingleUUID(this)">复制</button></div>`;
             }
         }
-        
+
         // 复制单个UUID
         function copySingleUUID(button) {
             const uuidText = button.previousElementSibling.textContent;
-            
-            navigator.clipboard.writeText(uuidText).then(function() {
+
+            navigator.clipboard.writeText(uuidText).then(function () {
                 const originalText = button.textContent;
                 button.textContent = '已复制';
                 button.style.backgroundColor = '#27ae60';
-                
-                setTimeout(function() {
+
+                setTimeout(function () {
                     button.textContent = originalText;
                     button.style.backgroundColor = '#3498db';
                 }, 2000);
-                
+
                 utils.showSuccess('复制成功');
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error('复制失败:', err);
                 utils.showError('复制失败，请手动复制');
             });
         }
-        
+
         // 复制全部UUID
         function copyAllUUIDs() {
             const uuidResult = document.getElementById('uuid-result');
             const uuidItems = uuidResult.querySelectorAll('div');
-            
+
             let textToCopy = '';
             if (uuidItems.length > 0) {
                 // 复制多个UUID，每个UUID占一行
@@ -406,31 +416,32 @@
                     textToCopy = uuidResult.textContent;
                 }
             }
-            
+
             if (!textToCopy) {
                 utils.showError('请先生成UUID');
                 return;
             }
-            
-            navigator.clipboard.writeText(textToCopy).then(function() {
+
+            navigator.clipboard.writeText(textToCopy).then(function () {
                 utils.showSuccess('已复制到剪贴板！');
-            }).catch(function(err) {
+            }).catch(function (err) {
                 console.error('复制失败:', err);
                 utils.showError('复制失败，请手动复制');
             });
         }
-        
+
         // 为输入框添加blur事件监听器
         document.getElementById('uuid-count').addEventListener('blur', validateUUIDCount);
-        
+
         // 验证生成数量
         function validateUUIDCount() {
             utils.validateInput(document.getElementById('uuid-count'));
         }
-        
+
         // 初始生成
         generateUUIDs();
     </script>
-  <script src="../common/js/nav.js"></script>
+    <script src="../common/js/nav.js"></script>
 </body>
+
 </html>

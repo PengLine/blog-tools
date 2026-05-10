@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
-	<meta name="description" content="在线文档免费签名工具,支持PDF文档和Word文档在线签名,免费在线手写签名。">
-	<meta name="keywords" content="在线文档签名工具, 免费在线手写签名, PDF文档免费在线签名, Word文档免费在线签名, 文档免费在线手写签名">
-	<meta name="author" content="余一叶知秋尽">
+    <meta name="description" content="在线文档免费签名工具,支持PDF文档和Word文档在线签名,免费在线手写签名。">
+    <meta name="keywords" content="在线文档签名工具, 免费在线手写签名, PDF文档免费在线签名, Word文档免费在线签名, 文档免费在线手写签名">
+    <meta name="author" content="余一叶知秋尽">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文档在线免费签名工具，PDF文档在线签名，Word文档在线签名</title>
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="../../common/css/style.css">
+    <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
 
     <!-- PDF.js库 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -26,6 +28,7 @@
     <!-- PDF-lib库 -->
     <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 </head>
+
 <body>
     <aside class="sidebar">
         <div class="sidebar-brand">
@@ -84,87 +87,96 @@
         </div>
     </aside>
     <main class="main">
-    <div class="container">
-        <h1>文档在线签名工具</h1>
-        
-        <main>
-            <div class="description-container">
-                <p class="description">
-                    支持<b style="color: #299bd8;">上传签名、绘制签名</b>。先跳转到需要添加签名的页，再点击“确认添加签名”，即可添加到该页文档中，再拖动位置、调节大小<br>
-                    如果需要添加多个签名，可重复以上操作。每个签名都支持单独设置或拖动，只需选中即可设置（目前仅支持PDF）
-                </p>
-                <p class="description">*（<b><em>所有处理均在您本地完成，不会上传网络服务器，无需担忧泄漏隐私</em></b>）</p>
-            </div>
-            <!-- 文件上传区域 -->
-            <section class="upload-section">
-                <input type="file" id="document-upload" accept=".docx,.pdf" />
-                <label for="document-upload" class="upload-btn">上传签名文档</label>
-            </section>
-            
-            <!-- 签名区域 -->
-            <section class="signature-section">
-                <h2>签名区域</h2>
-                <div class="signature-options">
-                    <button id="upload-signature-btn">上传签名</button>
-                    <button id="draw-signature-btn" class="active">绘制签名</button>
-                    <button id="clear-signature-btn">清除绘制</button>
-                    <button id="save-signature-btn">保存绘制</button>
+        <section class="page-hero">
+            <h1>文档在线签名工具</h1>
+            <p>支持<b style="color: #299bd8;">上传签名、绘制签名</b>。先跳转到需要添加签名的页，再点击“确认添加签名”，即可添加到该页文档中，再拖动位置、调节大小<br>
+                如果需要添加多个签名，可重复以上操作。每个签名都支持单独设置或拖动，只需选中即可设置（目前仅支持PDF）</p>
+        </section>
+        <div class="top-ad">
+            <amp-ad width="970" height="90" type="adsense" data-ad-client="ca-pub-2048978820706528"
+                data-ad-slot="7740281459" data-auto-format="rspv" data-full-width="" layout="responsive">
+            </amp-ad>
+        </div>
+        <div class="container">
+
+            <main>
+                <div class="description-container">
+                    <p class="description">*（<b><em>所有处理均在您本地完成，不会上传网络服务器，无需担忧泄漏隐私</em></b>）</p>
                 </div>
-                
-                <!-- 签名绘制区域 -->
-                <div class="signature-canvas-container">
-                    <canvas id="signature-canvas" width="500" height="300"></canvas>
-                </div>
-                
-                <!-- 签名上传区域 -->
-                <div class="signature-upload-container" style="display: none;">
-                    <input type="file" id="signature-upload" accept=".png,.jpg,.jpeg" />
-                    <div id="uploaded-signature-preview">
-                        <!-- 默认上传图片区域 -->
-                        <div class="default-upload-container">
-                            <div class="default-upload-image">
-                                <svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="400" height="200" fill="#f0f0f0" stroke="#ccc" stroke-width="2" rx="5" ry="5"/>
-                                    <text x="200" y="100" font-family="Arial, sans-serif" font-size="30" text-anchor="middle" fill="#999">点击上传签名图片</text>
-                                </svg>
+                <!-- 文件上传区域 -->
+                <section class="upload-section">
+                    <input type="file" id="document-upload" accept=".docx,.pdf" />
+                    <label for="document-upload" class="upload-btn">上传签名文档</label>
+                </section>
+
+                <!-- 签名区域 -->
+                <section class="signature-section">
+                    <h2>签名区域</h2>
+                    <div class="signature-options">
+                        <button id="upload-signature-btn">上传签名</button>
+                        <button id="draw-signature-btn" class="active">绘制签名</button>
+                        <button id="clear-signature-btn">清除绘制</button>
+                        <button id="save-signature-btn">保存绘制</button>
+                    </div>
+
+                    <!-- 签名绘制区域 -->
+                    <div class="signature-canvas-container">
+                        <canvas id="signature-canvas" width="500" height="300"></canvas>
+                    </div>
+
+                    <!-- 签名上传区域 -->
+                    <div class="signature-upload-container" style="display: none;">
+                        <input type="file" id="signature-upload" accept=".png,.jpg,.jpeg" />
+                        <div id="uploaded-signature-preview">
+                            <!-- 默认上传图片区域 -->
+                            <div class="default-upload-container">
+                                <div class="default-upload-image">
+                                    <svg width="400" height="200" viewBox="0 0 400 200"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <rect width="400" height="200" fill="#f0f0f0" stroke="#ccc" stroke-width="2"
+                                            rx="5" ry="5" />
+                                        <text x="200" y="100" font-family="Arial, sans-serif" font-size="30"
+                                            text-anchor="middle" fill="#999">点击上传签名图片</text>
+                                    </svg>
+                                </div>
+                                <!-- 悬浮提示 -->
+                                <div class="upload-prompt">点击选择图片</div>
                             </div>
-                            <!-- 悬浮提示 -->
-                            <div class="upload-prompt">点击选择图片</div>
                         </div>
                     </div>
-                </div>
-                <button id="confirm-signature-btn">确认添加签名</button>
-            </section>
+                    <button id="confirm-signature-btn">确认添加签名</button>
+                </section>
 
-            
-            <!-- 文档预览和签名编辑区域 -->
-            <section class="document-section">
-                <h2>文档预览</h2>
-                <div id="document-preview">
-                    <div id="signature-overlay"></div>
-                </div>
-                
-                <div class="page-info">
-                    <span id="page-info-text">第 1 页 / 共 1 页</span>
-                </div>
-                
-                <div class="signature-tools">
-                    <button id="prev-page-btn">上一页</button>
-                    <button id="next-page-btn">下一页</button>
-                    <button id="zoom-in-btn">放大</button>
-                    <button id="zoom-out-btn">缩小</button>
-                    <button id="reset-btn" hidden>重置</button>
-                    <button id="clear-btn">清除</button>
-                    <button id="save-btn">下载</button>
-                </div>
-            </section>
-        </main>
-    </div>
-    
-    <!-- 边界检查工具模块 -->
-    <script src="boundary-utils.js?v=1.0.0"></script>
-    <script src="script.js?v=20251224"></script>
+
+                <!-- 文档预览和签名编辑区域 -->
+                <section class="document-section">
+                    <h2>文档预览</h2>
+                    <div id="document-preview">
+                        <div id="signature-overlay"></div>
+                    </div>
+
+                    <div class="page-info">
+                        <span id="page-info-text">第 1 页 / 共 1 页</span>
+                    </div>
+
+                    <div class="signature-tools">
+                        <button id="prev-page-btn">上一页</button>
+                        <button id="next-page-btn">下一页</button>
+                        <button id="zoom-in-btn">放大</button>
+                        <button id="zoom-out-btn">缩小</button>
+                        <button id="reset-btn" hidden>重置</button>
+                        <button id="clear-btn">清除</button>
+                        <button id="save-btn">下载</button>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- 边界检查工具模块 -->
+        <script src="boundary-utils.js?v=1.0.0"></script>
+        <script src="script.js?v=20251224"></script>
     </main>
-  <script src="../../common/js/nav.js"></script>
+    <script src="../../common/js/nav.js"></script>
 </body>
+
 </html>
