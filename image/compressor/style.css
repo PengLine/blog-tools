@@ -9,16 +9,15 @@ h1 {
 }
 
 .description {
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-bottom: 20px;
-  text-align: center;
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .container {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    padding: 20px 0;
 }
 
 .upload-area {

@@ -19,7 +19,6 @@
 
 .mosaic-container {
   max-width: 1200px;
-  margin: 0 auto;
   background-color: white;
   padding: 30px;
   border-radius: 12px;
@@ -180,8 +179,10 @@ h3 {
   border-radius: 4px;
   opacity: 0.7;
   transition: opacity 0.3s ease;
-  z-index: 20; /* 确保播放按钮在最上层 */
-  position: relative; /* 确保z-index生效 */
+  z-index: 20;
+  /* 确保播放按钮在最上层 */
+  position: relative;
+  /* 确保z-index生效 */
 }
 
 .mosaic-control-button:hover {
@@ -190,35 +191,35 @@ h3 {
 
 /* 完全透明的覆盖层，用于捕获所有点击事件 */
 .mosaic-full-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: transparent;
-    z-index: 1;
-    pointer-events: none;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    touch-action: manipulation;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  touch-action: manipulation;
 }
 
 .mosaic-video-container video {
-    max-width: 100%;
-    max-height: 100%;
-    height: auto;
-    width: auto;
-    display: block;
-    margin: 0 auto;
-    /* 确保视频元素不能被选中 */
-    user-select: none !important;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    /* 确保触摸操作不会导致放大 */
-    touch-action: manipulation !important;
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  width: auto;
+  display: block;
+  margin: 0 auto;
+  /* 确保视频元素不能被选中 */
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  /* 确保触摸操作不会导致放大 */
+  touch-action: manipulation !important;
 }
 
 /* 视频信息显示样式 */
@@ -258,7 +259,8 @@ h3 {
   width: auto;
   height: auto;
   z-index: 1;
-  pointer-events: none; /* 确保Canvas不捕获鼠标事件 */
+  pointer-events: none;
+  /* 确保Canvas不捕获鼠标事件 */
 }
 
 /* 马赛克框样式 */
@@ -281,7 +283,8 @@ h3 {
   right: 0;
   bottom: 0;
   background-color: transparent;
-  z-index: 9; /* 确保覆盖层在视频之上，但在马赛克框之下 */
+  z-index: 9;
+  /* 确保覆盖层在视频之上，但在马赛克框之下 */
   pointer-events: auto;
   cursor: auto;
 }
@@ -303,10 +306,21 @@ h3 {
 }
 
 /* 调整缩放控制点的鼠标指针样式 */
-.mosaic-handle.top-left { cursor: nwse-resize; }
-.mosaic-handle.top-right { cursor: nesw-resize; }
-.mosaic-handle.bottom-left { cursor: nesw-resize; }
-.mosaic-handle.bottom-right { cursor: nwse-resize; }
+.mosaic-handle.top-left {
+  cursor: nwse-resize;
+}
+
+.mosaic-handle.top-right {
+  cursor: nesw-resize;
+}
+
+.mosaic-handle.bottom-left {
+  cursor: nesw-resize;
+}
+
+.mosaic-handle.bottom-right {
+  cursor: nwse-resize;
+}
 
 .mosaic-box.active {
   display: block;
@@ -319,9 +333,12 @@ h3 {
 
 /* 文字类型水印的特殊样式 - 完全透明，不显示框 */
 .mosaic-box.text-type {
-  border: 0; /* 移除边框 */
-  background-color: transparent; /* 完全透明背景 */
-  z-index: 50; /* 确保马赛克框本身有足够的层级 */
+  border: 0;
+  /* 移除边框 */
+  background-color: transparent;
+  /* 完全透明背景 */
+  z-index: 50;
+  /* 确保马赛克框本身有足够的层级 */
 }
 
 /* 确保所有类型的马赛克框都可以被点击和拖动 */
@@ -330,22 +347,26 @@ h3 {
 }
 
 .mosaic-box.text-type:hover {
-  border: 1px dashed rgba(100, 100, 100, 0.5); /* 仅在悬停时显示极细的虚线 */
-  background-color: transparent; /* 仍然保持透明背景 */
+  border: 1px dashed rgba(100, 100, 100, 0.5);
+  /* 仅在悬停时显示极细的虚线 */
+  background-color: transparent;
+  /* 仍然保持透明背景 */
 }
 
 /* 图片类型移动框悬停样式 */
 .mosaic-box:hover {
   border: 2px dashed #e74c3c;
-  background-color: rgba(231, 76, 60, 0.1); /* 半透明背景 */
+  background-color: rgba(231, 76, 60, 0.1);
+  /* 半透明背景 */
 }
 
 /* 文字水印内容容器的样式 - 确保文字可见性 */
-.mosaic-box.text-type > div {
+.mosaic-box.text-type>div {
   position: absolute;
   top: 0 !important;
   left: 0 !important;
-  z-index: 100 !important; /* 确保文字层级最高，不会被其他元素遮挡 */
+  z-index: 100 !important;
+  /* 确保文字层级最高，不会被其他元素遮挡 */
   pointer-events: none;
   white-space: nowrap;
 }
@@ -841,36 +862,41 @@ h3 {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 进度条样式 */
 .mosaic-progress-container {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .mosaic-progress-bar-wrapper {
-    width: 100%;
-    height: 20px;
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid #ddd;
+  width: 100%;
+  height: 20px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #ddd;
 }
 
 .mosaic-progress-bar {
-    height: 100%;
-    background-color: #4CAF50;
-    transition: width 0.3s ease;
-    border-radius: 10px;
+  height: 100%;
+  background-color: #4CAF50;
+  transition: width 0.3s ease;
+  border-radius: 10px;
 }
 
 .mosaic-progress-text {
-    text-align: center;
-    margin-top: 8px;
-    font-size: 14px;
-    color: #333;
+  text-align: center;
+  margin-top: 8px;
+  font-size: 14px;
+  color: #333;
 }
 
 /* 响应式设计 */
@@ -878,49 +904,49 @@ h3 {
   body {
     padding: 10px;
   }
-  
+
   .mosaic-container {
     padding: 20px;
   }
-  
+
   h1 {
     font-size: 2rem;
     margin-bottom: 20px;
   }
-  
+
   h2 {
     font-size: 1.5rem;
   }
-  
+
   h3 {
     font-size: 1.2rem;
   }
-  
+
   .mosaic-action-buttons,
   .mosaic-download-buttons {
     flex-direction: column;
   }
-  
+
   .mosaic-container button {
     width: 100%;
     min-width: auto;
   }
-  
+
   /* 在小屏幕上，时间设置也垂直排列 */
   .mosaic-time-row {
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .mosaic-time-row .mosaic-input-group {
     margin-bottom: 10px;
   }
-  
+
   .mosaic-input-group input,
   .mosaic-input-group select {
     font-size: 14px;
   }
-  
+
   .mosaic-message-container {
     top: 10px;
     left: 10px;

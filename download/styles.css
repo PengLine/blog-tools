@@ -116,7 +116,8 @@
 
 .image-preview-wrapper {
     position: relative;
-    padding-top: 100%; /* 1:1 宽高比 */
+    padding-top: 100%;
+    /* 1:1 宽高比 */
     overflow: hidden;
 }
 
@@ -224,8 +225,13 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* 无图片提示 */
@@ -243,11 +249,11 @@
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
         gap: 10px;
     }
-    
+
     .extracted-controls {
         flex-direction: column;
     }
-    
+
     .extracted-controls button {
         width: 100%;
         margin-bottom: 5px;
@@ -256,8 +262,7 @@
 
 .container {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    padding: 20px 0;
 }
 
 /* 标题样式 */
@@ -553,7 +558,7 @@ label {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .primary-button,
     .secondary-button {
         width: 100%;
@@ -615,6 +620,7 @@ label {
     color: #f57c00;
     background-color: #fff3e0;
 }
+
 /* 保存链接状态 */
 .status.saved-link {
     color: #1976d2;
@@ -897,8 +903,13 @@ label {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .modal-content {
@@ -913,11 +924,12 @@ label {
 }
 
 @keyframes slideIn {
-    from { 
+    from {
         transform: translateY(-50px);
         opacity: 0;
     }
-    to { 
+
+    to {
         transform: translateY(0);
         opacity: 1;
     }
@@ -968,7 +980,7 @@ label {
         width: 95%;
         margin: 10px;
     }
-    
+
     .preview-container {
         padding: 15px;
         min-height: 200px;
@@ -978,24 +990,24 @@ label {
 /* 响应式设计 */
 @media (max-width: 768px) {
     .container {
-        padding: 20px;
+        padding: 20px 0;
     }
-    
+
     h1 {
         font-size: 24px;
     }
-    
+
     .options {
         flex-direction: column;
         gap: 10px;
     }
-    
+
     .progress-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
     }
-    
+
     button {
         margin-bottom: 10px;
         width: 100%;

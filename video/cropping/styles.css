@@ -596,7 +596,7 @@ h3 {
 
 @media (max-width: 768px) {
     .container {
-        padding: 20px;
+        padding: 20px 0;
     }
 
     .action-buttons,

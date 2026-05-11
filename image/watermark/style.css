@@ -23,9 +23,9 @@
 }
 
 .container {
-	padding: 20px;
+    padding: 20px 0;
     max-width: 1200px;
-    margin: 5px auto;
+    /* margin: 5px auto; */
 }
 
 .upload-btn {
@@ -57,8 +57,15 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 h1 {
@@ -66,7 +73,7 @@ h1 {
     margin-bottom: 30px;
     color: var(--text-primary);
     font-size: 2.2rem;
-	color: #19788D;
+    color: #19788D;
     font-weight: 600;
 }
 
@@ -90,10 +97,14 @@ h2 {
     padding: 15px;
     background-color: var(--bg-tertiary);
     /* 设置默认高度和最大高度限制 */
-  min-height: 100px; /* 默认高度100px */
-  max-height: 300px; /* 最高限制300px */
-  overflow-y: auto; /* 添加垂直滚动条 */
-  line-height: 18px; /* 设置合适的行高 */
+    min-height: 100px;
+    /* 默认高度100px */
+    max-height: 300px;
+    /* 最高限制300px */
+    overflow-y: auto;
+    /* 添加垂直滚动条 */
+    line-height: 18px;
+    /* 设置合适的行高 */
 }
 
 .file-list-empty {
@@ -208,7 +219,7 @@ h2 {
 }
 
 /* 设置行容器样式 - 确保上下行对齐 */
-.setting-row, 
+.setting-row,
 .color-position-container {
     display: flex;
     gap: 20px;
@@ -217,7 +228,7 @@ h2 {
 }
 
 /* 行内设置项样式 */
-.setting-row .setting-group, 
+.setting-row .setting-group,
 .color-position-container .setting-group {
     flex: 1;
     min-width: 200px;
@@ -267,6 +278,7 @@ h2 {
     border-radius: 5px;
     font-size: 12px;
 }
+
 .setting-group label {
     /* width: 280px; */
     font-weight: 600;
@@ -311,7 +323,7 @@ h2 {
     position: relative;
 }
 
-.setting-group:first-child > label:first-child {
+.setting-group:first-child>label:first-child {
     width: auto;
     margin-bottom: 0;
 }
@@ -569,6 +581,7 @@ h2 {
         transform: scale(0, 0);
         opacity: 0.5;
     }
+
     100% {
         transform: scale(100, 100);
         opacity: 0;
@@ -582,7 +595,8 @@ h2 {
 }
 
 /* 下载按钮通用样式 */
-#downloadCurrentImage, #downloadAllImages {
+#downloadCurrentImage,
+#downloadAllImages {
     background-color: var(--success-color);
     color: white;
     position: relative;
@@ -647,56 +661,56 @@ h2 {
     body {
         padding: 10px;
     }
-    
+
     .container {
-        padding: 20px;
+        padding: 20px 0;
     }
-    
+
     h1 {
         font-size: 1.5rem;
         margin-bottom: 20px;
     }
-    
+
     h2 {
         font-size: 1.2rem;
     }
-    
+
     /* 在小屏幕上，设置行容器变为单列 */
-    .setting-row, 
+    .setting-row,
     .color-position-container {
         flex-direction: column;
         gap: 10px;
     }
-    
+
     .setting-group {
         flex-direction: column;
         align-items: flex-start;
         min-height: auto;
         padding-left: 0;
     }
-    
+
     .setting-group:hover {
         padding-left: 0;
         background-color: transparent;
     }
-    
+
     .setting-group label {
         width: 80%;
         margin-bottom: 5px;
         font-size: 0.9rem;
     }
-    
+
     .setting-group input[type="text"],
     .setting-group select {
         width: 95%;
         min-width: unset;
     }
-    
+
     .setting-group input[type="range"] {
         width: 95%;
         margin: 10px 0;
     }
-    
+
     #downloadImage {
         flex-direction: column;
         gap: 10px;
@@ -705,7 +719,7 @@ h2 {
         font-size: 14px;
         padding: 10px 20px;
     }
-    
+
     #previewContainer {
         min-height: 300px;
     }

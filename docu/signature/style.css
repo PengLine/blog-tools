@@ -1,7 +1,5 @@
-
 .container {
     max-width: 1200px;
-    margin: 0 auto;
     /* padding: 20px; */
 }
 
@@ -15,8 +13,8 @@
 }
 
 .container img {
-	
-	margin: 0 auto 0px !important;
+
+    margin: 0 auto 0px !important;
 }
 
 main {
@@ -130,6 +128,7 @@ h2 {
 .signature-options #clear-signature-btn:hover {
     background-color: #a91f15;
 }
+
 /* 保存签名按钮特殊样式 */
 .signature-options #save-signature-btn {
     background-color: #393db8;
@@ -374,7 +373,8 @@ h2 {
     margin-top: 20px;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: center; /* 使按钮居中显示 */
+    justify-content: center;
+    /* 使按钮居中显示 */
 }
 
 .zoom-targets {
@@ -491,7 +491,7 @@ button:disabled {
     main {
         grid-template-columns: 1fr;
     }
-    
+
     .document-section {
         grid-column: 1;
         grid-row: 3;
@@ -503,12 +503,12 @@ button:disabled {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto auto;
     }
-    
+
     .signature-section {
         grid-column: 1;
         grid-row: 2;
     }
-    
+
     .document-section {
         grid-column: 1;
         grid-row: 3;
@@ -521,17 +521,17 @@ button:disabled {
         width: 100%;
         height: 250px;
     }
-    
+
     #document-preview {
         height: 900px;
     }
-    
+
     /* 优化移动设备上的按钮样式 */
     .signature-tools {
         gap: 8px;
         margin-top: 15px;
     }
-    
+
     .signature-tools button {
         padding: 10px 20px;
         font-size: 0.9rem;
@@ -545,7 +545,7 @@ button:disabled {
     #signature-canvas {
         height: 200px;
     }
-    
+
     .signature-section {
         display: flex;
         flex-direction: column;

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SVG图片转换类型与清晰度解决方案</title>
-   
+
     <style>
         * {
             margin: 0;
@@ -12,7 +13,7 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #333;
@@ -20,45 +21,44 @@
             padding: 20px;
             min-height: 100vh;
         }
-        
+
         .container {
             max-width: 1200px;
-            margin: 0 auto;
             background-color: white;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
-        
+
         .container header {
             background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
             color: white;
             padding: 30px;
             text-align: center;
         }
-        
+
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
         }
-        
+
         .subtitle {
             font-size: 1.2rem;
             opacity: 0.9;
         }
-        
+
         .content {
             display: flex;
             flex-wrap: wrap;
             padding: 30px;
         }
-        
+
         .info-section {
             flex: 1;
             min-width: 300px;
             padding: 20px;
         }
-        
+
         .demo-section {
             flex: 1;
             min-width: 300px;
@@ -66,19 +66,19 @@
             background-color: #f9f9f9;
             border-radius: 10px;
         }
-        
+
         h2 {
             color: #182848;
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 2px solid #eaeaea;
         }
-        
+
         h3 {
             color: #4b6cb7;
             margin: 20px 0 10px;
         }
-        
+
         .format-card {
             background: white;
             border-radius: 8px;
@@ -87,17 +87,17 @@
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s;
         }
-        
+
         .format-card:hover {
             transform: translateY(-5px);
         }
-        
+
         .format-header {
             display: flex;
             align-items: center;
             margin-bottom: 10px;
         }
-        
+
         .format-icon {
             width: 40px;
             height: 40px;
@@ -110,33 +110,35 @@
             font-weight: bold;
             margin-right: 15px;
         }
-        
+
         .pros-cons {
             display: flex;
             margin-top: 10px;
         }
-        
-        .pros, .cons {
+
+        .pros,
+        .cons {
             flex: 1;
             padding: 0 10px;
         }
-        
-        .pros ul, .cons ul {
+
+        .pros ul,
+        .cons ul {
             list-style-type: none;
         }
-        
+
         .pros li:before {
             content: "✓ ";
             color: #4CAF50;
             font-weight: bold;
         }
-        
+
         .cons li:before {
             content: "✗ ";
             color: #F44336;
             font-weight: bold;
         }
-        
+
         .demo-container {
             background: white;
             border-radius: 8px;
@@ -144,19 +146,19 @@
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
             margin-bottom: 20px;
         }
-        
+
         .image-comparison {
             display: flex;
             justify-content: space-between;
             margin: 20px 0;
         }
-        
+
         .image-box {
             flex: 1;
             text-align: center;
             padding: 10px;
         }
-        
+
         .image-placeholder {
             width: 100%;
             height: 150px;
@@ -168,20 +170,20 @@
             margin-bottom: 10px;
             overflow: hidden;
         }
-        
+
         .svg-demo {
-            background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
-                        linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
-                        linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
-                        linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+            background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
+                linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
+                linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
             background-size: 20px 20px;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
-        
+
         .raster-demo {
             background-color: #f5f5f5;
         }
-        
+
         .tips {
             background: #e3f2fd;
             border-left: 4px solid #2196F3;
@@ -189,14 +191,14 @@
             margin: 20px 0;
             border-radius: 0 8px 8px 0;
         }
-        
+
         .solution-cards {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
             margin-top: 20px;
         }
-        
+
         .solution-card {
             flex: 1;
             min-width: 200px;
@@ -205,12 +207,12 @@
             padding: 15px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
         }
-        
+
         .solution-card h4 {
             color: #4b6cb7;
             margin-bottom: 10px;
         }
-        
+
         footer {
             text-align: center;
             padding: 20px;
@@ -218,33 +220,35 @@
             color: #666;
             font-size: 0.9rem;
         }
-        
+
         @media (max-width: 768px) {
             .content {
                 flex-direction: column;
             }
-            
+
             .image-comparison {
                 flex-direction: column;
             }
         }
     </style>
- 
+
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1>SVG图片转换类型与清晰度解决方案</h1>
             <p class="subtitle">解决SVG转换为其他格式后模糊的问题
-            <a href="index.html" target="" class="block text-sm text-primary hover:underline">
-                        <i class="fa fa-info-circle mr-1"></i>返回工具
-                    </a></p>
+                <a href="index.html" target="" class="block text-sm text-primary hover:underline">
+                    <i class="fa fa-info-circle mr-1"></i>返回工具
+                </a>
+            </p>
         </header>
-        
+
         <div class="content">
             <div class="info-section">
                 <h2>SVG转换格式对比</h2>
-                
+
                 <div class="format-card">
                     <div class="format-header">
                         <div class="format-icon">PNG</div>
@@ -267,7 +271,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="format-card">
                     <div class="format-header">
                         <div class="format-icon">JPG</div>
@@ -291,7 +295,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="format-card">
                     <div class="format-header">
                         <div class="format-icon">PDF</div>
@@ -314,21 +318,25 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="tips" style="background: #e3f2fd; border-left: 4px solid #2196F3; padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0;">
+
+                <div class="tips"
+                    style="background: #e3f2fd; border-left: 4px solid #2196F3; padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0;">
                     <h3 style="color: #1565C0; margin-bottom: 15px;">为什么转换后会模糊？</h3>
-                    <p style="font-size: 1.05rem; margin-bottom: 12px;"><strong>SVG是矢量格式</strong>，使用数学公式描述图形，可以无限缩放而不失真。</p>
-                    <p style="font-size: 1.05rem;"><strong>转换为PNG/JPEG等位图格式后</strong>，图像被栅格化为固定数量的像素。当放大这些位图时，像素会被拉伸，导致模糊。这是位图格式的固有特性，因为它们基于像素网格而非数学描述。</p>
+                    <p style="font-size: 1.05rem; margin-bottom: 12px;"><strong>SVG是矢量格式</strong>，使用数学公式描述图形，可以无限缩放而不失真。
+                    </p>
+                    <p style="font-size: 1.05rem;">
+                        <strong>转换为PNG/JPEG等位图格式后</strong>，图像被栅格化为固定数量的像素。当放大这些位图时，像素会被拉伸，导致模糊。这是位图格式的固有特性，因为它们基于像素网格而非数学描述。
+                    </p>
                 </div>
             </div>
-            
+
             <div class="demo-section">
                 <h2>清晰度对比演示</h2>
-                
+
                 <div class="demo-container">
                     <h3>SVG vs 位图格式</h3>
                     <p>SVG保持清晰度，而位图在放大后变得模糊</p>
-                    
+
                     <div class="image-comparison">
                         <div class="image-box">
                             <div class="image-placeholder svg-demo">
@@ -339,50 +347,52 @@
                             </div>
                             <p>SVG - 矢量格式</p>
                         </div>
-                        
+
                         <div class="image-box">
                             <div class="image-placeholder raster-demo">
                                 <!-- 模拟模糊的PNG -->
-                                <div style="width: 100%; height: 100%; background: radial-gradient(circle, #4b6cb7 0%, transparent 70%); filter: blur(1px);"></div>
+                                <div
+                                    style="width: 100%; height: 100%; background: radial-gradient(circle, #4b6cb7 0%, transparent 70%); filter: blur(1px);">
+                                </div>
                             </div>
                             <p>PNG - 放大后模糊</p>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="demo-container">
                     <h3>解决模糊问题的方案</h3>
-                    
+
                     <div class="solution-cards">
                         <div class="solution-card">
                             <h4>提高输出分辨率</h4>
                             <p>在转换时设置更高的DPI（每英寸点数），例如从72DPI提高到300DPI</p>
                         </div>
-                        
+
                         <div class="solution-card">
                             <h4>直接使用SVG</h4>
                             <p>在可能的情况下，直接在网页或应用中使用SVG格式</p>
                         </div>
-                        
+
                         <div class="solution-card">
                             <h4>使用PDF格式</h4>
                             <p>当需要打印或高质量输出时，转换为PDF保持矢量特性</p>
                         </div>
                     </div>
-                    
+
                     <div class="solution-cards">
                         <div class="solution-card">
                             <h4>生成多尺寸版本</h4>
                             <p>为不同使用场景生成不同分辨率的版本</p>
                         </div>
-                        
+
                         <div class="solution-card">
                             <h4>使用现代格式</h4>
                             <p>考虑使用WebP格式，它在相同文件大小下提供更好的质量</p>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="tips">
                     <h3>最佳实践建议</h3>
                     <ul>
@@ -394,10 +404,11 @@
                 </div>
             </div>
         </div>
-        
+
         <footer>
             <p>© 2023 SVG转换解决方案 | 设计用于解决SVG转换为其他格式后的清晰度问题</p>
         </footer>
     </div>
 </body>
+
 </html>
