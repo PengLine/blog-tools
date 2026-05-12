@@ -1,25 +1,27 @@
 /* 全局样式重置 */
 @font-face {
-  font-family: "iconfont"; /* Project id 5007233 */
-  src: url('../common/font/iconfont.woff2?t=1761390387822') format('woff2'),
-       url('../common/font/iconfont.woff?t=1761390387822') format('woff'),
-       url('../common/font/iconfont.ttf?t=1761390387822') format('truetype');
+    font-family: "iconfont";
+    /* Project id 5007233 */
+    src: url('../common/font/iconfont.woff2?t=1761390387822') format('woff2'),
+        url('../common/font/iconfont.woff?t=1761390387822') format('woff'),
+        url('../common/font/iconfont.ttf?t=1761390387822') format('truetype');
 }
 
 .iconfont {
-  font-family: "iconfont" !important;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: bolder;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-family: "iconfont" !important;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: bolder;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .icon-quanping1:before {
-  content: "\e8fa";
+    content: "\e8fa";
 }
+
 .icon-quxiaoquanping:before {
-  content: "\e656";
+    content: "\e656";
 }
 
 /* 全局样式重置 */
@@ -27,6 +29,11 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+.container {
+    max-width: 1200px;
+    padding: 40px 0;
 }
 
 /* 通知容器样式 */
@@ -212,36 +219,50 @@ h1 {
 }
 
 /* 压缩按钮样式（同时适用于JSON格式化和JSON比对） */
-#minify-btn, #minify-target-btn, #sync-minify-btn, #minify-btn-bottom {
+#minify-btn,
+#minify-target-btn,
+#sync-minify-btn,
+#minify-btn-bottom {
     background-color: #ffc107;
     color: #212529;
 }
 
-#minify-btn:hover, #minify-target-btn:hover, #sync-minify-btn:hover {
+#minify-btn:hover,
+#minify-target-btn:hover,
+#sync-minify-btn:hover {
     background-color: #e0a800;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
 }
 
 /* 格式化按钮样式（同时适用于JSON格式化和JSON比对） */
-#format-btn, #format-target-btn, #sync-format-btn {
+#format-btn,
+#format-target-btn,
+#sync-format-btn {
     background-color: #17a2b8;
     color: white;
 }
 
-#format-btn:hover, #format-target-btn:hover, #sync-format-btn:hover {
+#format-btn:hover,
+#format-target-btn:hover,
+#sync-format-btn:hover {
     background-color: #138496;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3);
 }
 
 /* 转义按钮样式（同时适用于JSON格式化和JSON比对） */
-#escape-btn, #escape-target-btn, #sync-escape-btn, #escape-btn-bottom {
+#escape-btn,
+#escape-target-btn,
+#sync-escape-btn,
+#escape-btn-bottom {
     background-color: #fd7e14;
     color: white;
 }
 
-#escape-btn:hover, #escape-target-btn:hover, #sync-escape-btn:hover {
+#escape-btn:hover,
+#escape-target-btn:hover,
+#sync-escape-btn:hover {
     background-color: #e06c14;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(253, 126, 20, 0.3);
@@ -272,7 +293,9 @@ h1 {
 }
 
 /* 复制按钮样式 */
-#copy-original-btn, #copy-target-btn, .copy-btn {
+#copy-original-btn,
+#copy-target-btn,
+.copy-btn {
     background-color: #007bff;
     color: white;
     border: none;
@@ -284,6 +307,7 @@ h1 {
     margin-left: 10px;
     transition: all 0.2s ease;
 }
+
 #copy-btn {
     background-color: #007bff;
     color: white;
@@ -295,14 +319,20 @@ h1 {
     transition: all 0.2s ease;
 }
 
-#copy-btn:hover, #copy-original-btn:hover, #copy-target-btn:hover, .copy-btn:hover {
+#copy-btn:hover,
+#copy-original-btn:hover,
+#copy-target-btn:hover,
+.copy-btn:hover {
     background-color: #0069d9;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
 }
 
 /* 格式化按钮样式 */
-.format-btn, #format-original-btn, #format-target-btn, #sync-format-btn {
+.format-btn,
+#format-original-btn,
+#format-target-btn,
+#sync-format-btn {
     background-color: #17a2b8;
     color: white;
     border: none;
@@ -315,14 +345,20 @@ h1 {
     transition: all 0.2s ease;
 }
 
-.format-btn:hover, #format-original-btn:hover, #format-target-btn:hover, #sync-format-btn:hover {
+.format-btn:hover,
+#format-original-btn:hover,
+#format-target-btn:hover,
+#sync-format-btn:hover {
     background-color: #138496;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3);
 }
 
 /* 压缩按钮样式 */
-.minify-btn, #minify-original-btn, #minify-target-btn, #sync-minify-btn {
+.minify-btn,
+#minify-original-btn,
+#minify-target-btn,
+#sync-minify-btn {
     background-color: #ffc107;
     color: #212529;
     border: none;
@@ -335,14 +371,19 @@ h1 {
     transition: all 0.2s ease;
 }
 
-.minify-btn:hover, #minify-original-btn:hover, #minify-target-btn:hover, #sync-minify-btn:hover {
+.minify-btn:hover,
+#minify-original-btn:hover,
+#minify-target-btn:hover,
+#sync-minify-btn:hover {
     background-color: #e0a800;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
 }
 
 /* 清除内容按钮样式 */
-.clear-btn, #clear-original-btn, #clear-target-btn {
+.clear-btn,
+#clear-original-btn,
+#clear-target-btn {
     background-color: #6c757d;
     color: white;
     border: none;
@@ -355,7 +396,9 @@ h1 {
     transition: all 0.2s ease;
 }
 
-.clear-btn:hover, #clear-original-btn:hover, #clear-target-btn:hover {
+.clear-btn:hover,
+#clear-original-btn:hover,
+#clear-target-btn:hover {
     background-color: #5a6268;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
@@ -542,131 +585,200 @@ h1 {
     background-color: #218838;
 }
 
-.compare-result {    flex: 1;    font-size: 14px;    color: #495057;    line-height: 1.6;
+.compare-result {
+    flex: 1;
+    font-size: 14px;
+    color: #495057;
+    line-height: 1.6;
 }
 
-.compare-result .match {    color: #28a745;    font-weight: 500;
+.compare-result .match {
+    color: #28a745;
+    font-weight: 500;
 }
 
-.compare-result .diff-title {    color: #dc3545;    font-weight: 600;    font-size: 16px;
+.compare-result .diff-title {
+    color: #dc3545;
+    font-weight: 600;
+    font-size: 16px;
 }
 
 /* 差异列表样式 */
-.diff-list {    list-style: none;    padding: 0;    margin: 10px 0;
+.diff-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
 }
 
-.diff-item {    padding: 10px;    margin-bottom: 8px;    border-radius: 6px;    border-left: 4px solid #6c757d;    background-color: #f8f9fa;    transition: all 0.2s ease;
+.diff-item {
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    border-left: 4px solid #6c757d;
+    background-color: #f8f9fa;
+    transition: all 0.2s ease;
 }
 
-.diff-item:hover {    background-color: #e9ecef;    
+.diff-item:hover {
+    background-color: #e9ecef;
     /* transform: translateX(2px); */
 }
 
 /* 不同类型差异的样式 */
-.diff-added {    border-left-color: #28a745;    background-color: rgba(40, 167, 69, 0.08);
+.diff-added {
+    border-left-color: #28a745;
+    background-color: rgba(40, 167, 69, 0.08);
 }
 
-.diff-removed {    border-left-color: #dc3545;    background-color: rgba(220, 53, 69, 0.08);
+.diff-removed {
+    border-left-color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.08);
 }
 
-.diff-modified {    border-left-color: #ffc107;    background-color: rgba(255, 193, 7, 0.08);
+.diff-modified {
+    border-left-color: #ffc107;
+    background-color: rgba(255, 193, 7, 0.08);
 }
 
-.diff-type {    border-left-color: #17a2b8;    background-color: rgba(23, 162, 184, 0.08);
+.diff-type {
+    border-left-color: #17a2b8;
+    background-color: rgba(23, 162, 184, 0.08);
 }
 
-.diff-other {    border-left-color: #6c757d;    background-color: rgba(108, 117, 125, 0.08);
+.diff-other {
+    border-left-color: #6c757d;
+    background-color: rgba(108, 117, 125, 0.08);
 }
 
 /* 差异路径和描述样式 */
-.diff-path {    font-weight: 600;    color: #495057;    margin-right: 8px;    background-color: rgba(0, 0, 0, 0.05);    padding: 2px 6px;    border-radius: 3px;
+.diff-path {
+    font-weight: 600;
+    color: #495057;
+    margin-right: 8px;
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 2px 6px;
+    border-radius: 3px;
 }
 
-.diff-description {    font-weight: 500;
+.diff-description {
+    font-weight: 500;
 }
 
 /* 差异比较样式 */
-.diff-comparison {    display: flex;    align-items: center;    gap: 8px;    margin-top: 6px;
+.diff-comparison {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
     padding-top: 6px;
     border-top: 1px dashed #dee2e6;
 }
 
-.diff-old {    color: #dc3545;    background-color: rgba(220, 53, 69, 0.1);    padding: 2px 6px;    border-radius: 3px;
+.diff-old {
+    color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
     font-size: 13px;
 }
 
-.diff-new {    color: #28a745;    background-color: rgba(40, 167, 69, 0.1);    padding: 2px 6px;    border-radius: 3px;
+.diff-new {
+    color: #28a745;
+    background-color: rgba(40, 167, 69, 0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
     font-size: 13px;
 }
 
-.diff-arrow {    color: #6c757d;    font-weight: bold;
+.diff-arrow {
+    color: #6c757d;
+    font-weight: bold;
 }
 
 /* 差异统计样式 */
-.diff-stats {    display: flex;    flex-wrap: wrap;    gap: 10px;    margin-top: 15px;
-    padding: 10px;    background-color: #f8f9fa;
+.diff-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f8f9fa;
     border-radius: 6px;
     font-size: 13px;
 }
 
-.stat-item {    font-weight: 500;
-}
-
-.stat-added {    color: #28a745;
+.stat-item {
     font-weight: 500;
 }
 
-.stat-removed {    color: #dc3545;
+.stat-added {
+    color: #28a745;
     font-weight: 500;
 }
 
-.stat-modified {    color: #ffc107;
+.stat-removed {
+    color: #dc3545;
     font-weight: 500;
 }
 
-.stat-type {    color: #17a2b8;
+.stat-modified {
+    color: #ffc107;
+    font-weight: 500;
+}
+
+.stat-type {
+    color: #17a2b8;
     font-weight: 500;
 }
 
 /* JSON编辑器语法高亮样式 */
-.json-editor {    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+.json-editor {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
     font-size: 14px;
     line-height: 1.5;
 }
 
-.json-key {    color: #0066cc;
+.json-key {
+    color: #0066cc;
     font-weight: 500;
 }
 
-.json-string {    color: #008000;
+.json-string {
+    color: #008000;
 }
 
-.json-number {    color: #ff0000;
+.json-number {
+    color: #ff0000;
 }
 
-.json-boolean {    color: #0000ff;
+.json-boolean {
+    color: #0000ff;
 }
 
-.json-null {    color: #666666;
+.json-null {
+    color: #666666;
     font-style: italic;
 }
 
 /* 差异节点高亮样式 */
-.diff-key {    background-color: #fff3cd;
+.diff-key {
+    background-color: #fff3cd;
     padding: 1px 2px;
     border-radius: 2px;
 }
 
-.diff-key-added {    background-color: #d4edda;
+.diff-key-added {
+    background-color: #d4edda;
     color: #155724;
     font-weight: bold;
     padding: 1px 2px;
     border-radius: 2px;
 }
 
-.diff-key-removed {    background-color: #f8d7da;
+.diff-key-removed {
+    background-color: #f8d7da;
     color: #721c24;
     font-weight: bold;
     padding: 1px 2px;
@@ -674,7 +786,8 @@ h1 {
     text-decoration: line-through;
 }
 
-.diff-key-modified {    background-color: #fff3cd;
+.diff-key-modified {
+    background-color: #fff3cd;
     color: #856404;
     font-weight: bold;
     padding: 1px 2px;
@@ -682,7 +795,9 @@ h1 {
 }
 
 /* 确保错误信息样式 */
-.compare-result .error {    color: #dc3545;    font-weight: 500;
+.compare-result .error {
+    color: #dc3545;
+    font-weight: 500;
 }
 
 /* 响应式设计 */
@@ -690,7 +805,7 @@ h1 {
     .compare-content {
         flex-direction: column;
     }
-    
+
     .compare-actions {
         flex-direction: column;
         align-items: flex-start;
@@ -707,7 +822,7 @@ h1 {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     border: 1px solid #e9ecef;
     transition: box-shadow 0.3s ease;
-	background: var(--card-bg);
+    background: var(--card-bg);
 }
 
 .input-box:hover {
@@ -743,8 +858,8 @@ h1 {
 
 /* 全屏按钮样式 */
 .fullscreen-btn {
-	position: relative;
-	background-color: #697d90;
+    position: relative;
+    background-color: #697d90;
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 5px 8px;
@@ -879,7 +994,8 @@ h1 {
 }
 
 .compare-container.fullscreen-mode .fullscreen-btn i:before {
-    content: "\e601"; /* 退出全屏图标，需要根据实际图标字体调整 */
+    content: "\e601";
+    /* 退出全屏图标，需要根据实际图标字体调整 */
 }
 
 
@@ -1300,10 +1416,15 @@ button:active {
 }
 
 /* 确保编辑器区域的滚动条也应用样式 */
-.editor-container, .editor-content, #line-numbers, 
-#original-json, #target-json, 
-#original-line-numbers, #target-line-numbers,
-#compare-result, .tab-content {
+.editor-container,
+.editor-content,
+#line-numbers,
+#original-json,
+#target-json,
+#original-line-numbers,
+#target-line-numbers,
+#compare-result,
+.tab-content {
     scrollbar-width: thin;
     scrollbar-color: #c1c1c1 #f1f1f1;
 }
@@ -1431,7 +1552,9 @@ button:active {
     .bottom-buttons #copy-btn-bottom {
         background-color: #2779B7;
     }
-}/* JSON姣斿琛屽彿鏍峰紡 */
+}
+
+/* JSON姣斿琛屽彿鏍峰紡 */
 .diff-line-number {
     font-size: 12px;
     color: #666;

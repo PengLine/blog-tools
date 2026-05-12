@@ -15,8 +15,10 @@
     </style>
     <style>
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             padding: 40px 0;
+            width: 1000px;
+            margin: auto;
         }
 
         .tabs {
@@ -645,11 +647,11 @@
             resultEl.style.display = 'flex';
             if (match) {
                 resultEl.className = 'verify-result match';
-                resultEl.innerHTML = '✅ MD5 校验通过 — 文本与哈希值匹配';
+                resultEl.innerHTML = 'MD5 校验通过 — 文本与哈希值匹配';
             } else {
                 resultEl.className = 'verify-result mismatch';
                 var actualDisplay = actualHash32.toLowerCase() === normalizedExpected ? actualHash32.toLowerCase() : actualHash32.toLowerCase();
-                resultEl.innerHTML = '❌ MD5 校验不匹配<br><small>实际 32位 MD5：' + actualHash32.toLowerCase() + '</small><br><small>实际 16位 MD5：' + actualHash16.toLowerCase() + '</small>';
+                resultEl.innerHTML = 'MD5 校验不匹配<br><small>实际 32位 MD5：' + actualHash32.toLowerCase() + '</small><br><small>实际 16位 MD5：' + actualHash16.toLowerCase() + '</small>';
             }
         }
 

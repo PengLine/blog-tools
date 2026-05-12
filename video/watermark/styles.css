@@ -17,10 +17,9 @@
   box-sizing: border-box;
 }
 
-.mosaic-container {
+.container {
   max-width: 1200px;
   background-color: white;
-  padding: 30px;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
@@ -549,7 +548,7 @@ h3 {
   margin-top: 25px;
 }
 
-.mosaic-container button {
+.container button {
   padding: 12px 24px;
   border: none;
   border-radius: 10px;
@@ -563,7 +562,7 @@ h3 {
   min-width: 100px;
 }
 
-.mosaic-container button::after {
+.container button::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -576,22 +575,22 @@ h3 {
   transition: width 0.6s, height 0.6s;
 }
 
-.mosaic-container button:hover::after {
+.container button:hover::after {
   width: 300px;
   height: 300px;
 }
 
-.mosaic-container button:hover:not(:disabled) {
+.container button:hover:not(:disabled) {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
 }
 
-.mosaic-container button:active {
+.container button:active {
   transform: translateY(0);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.mosaic-container button:disabled {
+.container button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
@@ -905,7 +904,7 @@ h3 {
     padding: 10px;
   }
 
-  .mosaic-container {
+  .container {
     padding: 20px;
   }
 
@@ -927,7 +926,7 @@ h3 {
     flex-direction: column;
   }
 
-  .mosaic-container button {
+  .container button {
     width: 100%;
     min-width: auto;
   }
