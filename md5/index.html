@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="MD5在线加密工具, MD5哈希生成, MD5校验, 批量MD5生成, 支持16位32位大小写输出, 纯前端运行保护数据安全">
+    <meta name="keywords" content="MD5加密, MD5在线生成, MD5校验, MD5哈希, 批量MD5, 16位MD5, 32位MD5, 免费MD5工具">
+    <meta name="author" content="余一叶知秋尽">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD5在线加密工具 - 工具系统</title>
+    <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <style>
+        @import '../common/css/style.css';
+    </style>
+    <style>
+        .container {
+            max-width: 1000px;
+            padding: 40px 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            background: #fff;
+            border-radius: 10px;
+            padding: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: #4f46e5;
+            color: #fff;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .tool-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            padding: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Courier New', Consolas, monospace;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.2s;
+            line-height: 1.6;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Courier New', Consolas, monospace;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input[type="number"]:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .options-row {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .option-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .option-group label {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #475569;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+
+        .btn-outline {
+            background: #fff;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-outline:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .result-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .result-section h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+
+        .result-content {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 14px;
+            word-break: break-all;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .result-text {
+            flex: 1;
+            word-break: break-all;
+        }
+
+        .result-placeholder {
+            color: #94a3b8;
+        }
+
+        .copy-icon-btn {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+            font-size: 14px;
+        }
+
+        .copy-icon-btn:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .copy-icon-btn.copied {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #059669;
+        }
+
+        .batch-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .batch-table th {
+            text-align: left;
+            padding: 10px 12px;
+            background: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            font-size: 13px;
+            border-radius: 6px 6px 0 0;
+        }
+
+        .batch-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: top;
+            word-break: break-all;
+        }
+
+        .batch-table .line-num {
+            width: 48px;
+            color: #94a3b8;
+            text-align: center;
+        }
+
+        .batch-table .hash-cell {
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .verify-result {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .verify-result.match {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .verify-result.mismatch {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px 16px;
+            }
+
+            .tool-card {
+                padding: 20px;
+            }
+
+            .options-row {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .tabs {
+                flex-direction: column;
+                gap: 2px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <a href="../index.html">
+                <span class="brand-icon">⚡</span>
+                工具系统
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">图片工具</div>
+            <a href="../image/compressor/index.html">
+                <span class="nav-icon">📦</span>图片压缩
+            </a>
+            <a href="../image/convert/index.html">
+                <span class="nav-icon">🔄</span>格式转换
+            </a>
+            <a href="../image/watermark/index.html">
+                <span class="nav-icon">💧</span>图片水印
+            </a>
+
+            <div class="nav-section">视频工具</div>
+            <a href="../video/cropping/index.html">
+                <span class="nav-icon">✂️</span>视频裁剪
+            </a>
+            <a href="../video/watermark/index.html">
+                <span class="nav-icon">🎥</span>视频水印
+            </a>
+
+            <div class="nav-section">数据 & 开发</div>
+            <a href="../json/index.html">
+                <span class="nav-icon">{ }</span>JSON 格式化
+            </a>
+            <a href="../yaml/index.html">
+                <span class="nav-icon">⚙️</span>YAML 格式化
+            </a>
+            <a href="../pug/index.html">
+                <span class="nav-icon">🌿</span>Pug 格式化
+            </a>
+            <a href="../pwd/index.html">
+                <span class="nav-icon">🔑</span>密码生成
+            </a>
+            <a href="../uuid/index.html">
+                <span class="nav-icon">🆔</span>UUID 生成
+            </a>
+            <a href="../diagrams/mermaid/index.html">
+                <span class="nav-icon">📊</span>Mermaid 图表
+            </a>
+            <a href="../md5/index.html" class="active">
+                <span class="nav-icon">🔐</span>MD5 加密
+            </a>
+
+            <div class="nav-section">文档 & 下载</div>
+            <a href="../docu/signature/index.html">
+                <span class="nav-icon">✍️</span>签名工具
+            </a>
+            <a href="../docu/watermark/index.html">
+                <span class="nav-icon">🛡️</span>文档水印
+            </a>
+            <a href="../download/index.html">
+                <span class="nav-icon">⬇️</span>批量下载
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <p>纯前端运行 · 数据本地处理</p>
+        </div>
+    </aside>
+
+    <main class="main">
+        <section class="page-hero">
+            <h1>MD5 在线加密工具</h1>
+            <p>支持 MD5 哈希生成、校验、批量处理，纯前端运行保护数据安全</p>
+        </section>
+        <div class="top-ad">
+            <amp-ad width="970" height="90" type="adsense" data-ad-client="ca-pub-2048978820706528"
+                data-ad-slot="7740281459" data-auto-format="rspv" data-full-width="" layout="responsive">
+            </amp-ad>
+        </div>
+
+        <div class="container">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="generate">MD5 生成</button>
+                <button class="tab-btn" data-tab="verify">MD5 校验</button>
+                <button class="tab-btn" data-tab="batch">批量生成</button>
+            </div>
+
+            <!-- MD5 生成 -->
+            <div id="tab-generate" class="tab-pane active">
+                <div class="tool-card">
+                    <div class="form-group">
+                        <label for="gen-input">输入文本</label>
+                        <textarea id="gen-input" placeholder="请输入要计算 MD5 的文本..."></textarea>
+                    </div>
+
+                    <div class="options-row">
+                        <div class="option-group">
+                            <label>输出大小写</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="gen-case" value="lower" checked> 小写</label>
+                                <label><input type="radio" name="gen-case" value="upper"> 大写</label>
+                            </div>
+                        </div>
+                        <div class="option-group">
+                            <label>输出位数</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="gen-bits" value="32" checked> 32位</label>
+                                <label><input type="radio" name="gen-bits" value="16"> 16位</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-row">
+                        <button class="btn btn-primary" onclick="generateMD5()">生成 MD5</button>
+                        <button class="btn btn-outline" onclick="clearGenerate()">清空</button>
+                    </div>
+
+                    <div class="result-section">
+                        <h4>MD5 结果</h4>
+                        <div class="result-content" id="gen-result">
+                            <span class="result-text result-placeholder">等待生成...</span>
+                            <button class="copy-icon-btn" title="复制结果" onclick="copyResult('gen-result')"
+                                style="display:none;">📋</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MD5 校验 -->
+            <div id="tab-verify" class="tab-pane">
+                <div class="tool-card">
+                    <div class="form-group">
+                        <label for="verify-input">原始文本</label>
+                        <textarea id="verify-input" placeholder="请输入原始文本..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="verify-hash">待校验的 MD5 哈希值</label>
+                        <input type="text" id="verify-hash" placeholder="请输入 MD5 哈希值（不区分大小写）...">
+                    </div>
+
+                    <div class="btn-row">
+                        <button class="btn btn-primary" onclick="verifyMD5()">校验 MD5</button>
+                        <button class="btn btn-outline" onclick="clearVerify()">清空</button>
+                    </div>
+
+                    <div id="verify-result" style="display:none;"></div>
+                </div>
+            </div>
+
+            <!-- 批量生成 -->
+            <div id="tab-batch" class="tab-pane">
+                <div class="tool-card">
+                    <div class="form-group">
+                        <label for="batch-input">输入文本（每行一个）</label>
+                        <textarea id="batch-input" placeholder="请输入要批量计算 MD5 的文本，每行一个..."></textarea>
+                    </div>
+
+                    <div class="options-row">
+                        <div class="option-group">
+                            <label>输出大小写</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="batch-case" value="lower" checked> 小写</label>
+                                <label><input type="radio" name="batch-case" value="upper"> 大写</label>
+                            </div>
+                        </div>
+                        <div class="option-group">
+                            <label>输出位数</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="batch-bits" value="32" checked> 32位</label>
+                                <label><input type="radio" name="batch-bits" value="16"> 16位</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-row">
+                        <button class="btn btn-primary" onclick="batchMD5()">批量生成</button>
+                        <button class="btn btn-success" onclick="copyBatchResult()" id="batch-copy-btn"
+                            style="display:none;">复制全部结果</button>
+                        <button class="btn btn-outline" onclick="clearBatch()">清空</button>
+                    </div>
+
+                    <div class="result-section" id="batch-result-section" style="display:none;">
+                        <h4>批量结果</h4>
+                        <div style="overflow-x:auto;">
+                            <table class="batch-table" id="batch-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:48px;">#</th>
+                                        <th>原文</th>
+                                        <th>MD5</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="batch-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2026 工具系统. PengLine 保留所有权利.</p>
+        </footer>
+    </main>
+
+    <script src="../common/js/utils.js"></script>
+    <script>
+        function computeMD5(text) {
+            return CryptoJS.MD5(text).toString();
+        }
+
+        function get16Bit(hash32) {
+            return hash32.substring(8, 24);
+        }
+
+        function formatHash(hash, bits, casing) {
+            var result = bits === '16' ? get16Bit(hash) : hash;
+            return casing === 'upper' ? result.toUpperCase() : result.toLowerCase();
+        }
+
+        // ===== Tab switching =====
+        document.querySelectorAll('.tab-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+                document.querySelectorAll('.tab-pane').forEach(function (p) { p.classList.remove('active'); });
+                btn.classList.add('active');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // ===== MD5 生成 =====
+        function generateMD5() {
+            var input = document.getElementById('gen-input').value;
+            var resultEl = document.getElementById('gen-result');
+            var copyBtn = resultEl.querySelector('.copy-icon-btn');
+            var textSpan = resultEl.querySelector('.result-text');
+
+            if (!input.trim()) {
+                textSpan.textContent = '请输入文本';
+                textSpan.className = 'result-text result-placeholder';
+                copyBtn.style.display = 'none';
+                return;
+            }
+
+            var bits = document.querySelector('input[name="gen-bits"]:checked').value;
+            var casing = document.querySelector('input[name="gen-case"]:checked').value;
+            var hash = computeMD5(input);
+            var result = formatHash(hash, bits, casing);
+
+            textSpan.textContent = result;
+            textSpan.className = 'result-text';
+            copyBtn.style.display = 'flex';
+        }
+
+        function clearGenerate() {
+            document.getElementById('gen-input').value = '';
+            var resultEl = document.getElementById('gen-result');
+            var textSpan = resultEl.querySelector('.result-text');
+            textSpan.textContent = '等待生成...';
+            textSpan.className = 'result-text result-placeholder';
+            resultEl.querySelector('.copy-icon-btn').style.display = 'none';
+        }
+
+        // ===== MD5 校验 =====
+        function verifyMD5() {
+            var input = document.getElementById('verify-input').value;
+            var expectedHash = document.getElementById('verify-hash').value.trim();
+            var resultEl = document.getElementById('verify-result');
+
+            if (!input.trim()) {
+                utils.showError('请输入原始文本');
+                return;
+            }
+
+            if (!expectedHash) {
+                utils.showError('请输入待校验的 MD5 哈希值');
+                return;
+            }
+
+            var actualHash32 = computeMD5(input);
+            var actualHash16 = get16Bit(actualHash32);
+
+            var normalizedExpected = expectedHash.toLowerCase();
+            var match = (actualHash32.toLowerCase() === normalizedExpected) ||
+                (actualHash16.toLowerCase() === normalizedExpected);
+
+            resultEl.style.display = 'flex';
+            if (match) {
+                resultEl.className = 'verify-result match';
+                resultEl.innerHTML = '✅ MD5 校验通过 — 文本与哈希值匹配';
+            } else {
+                resultEl.className = 'verify-result mismatch';
+                var actualDisplay = actualHash32.toLowerCase() === normalizedExpected ? actualHash32.toLowerCase() : actualHash32.toLowerCase();
+                resultEl.innerHTML = '❌ MD5 校验不匹配<br><small>实际 32位 MD5：' + actualHash32.toLowerCase() + '</small><br><small>实际 16位 MD5：' + actualHash16.toLowerCase() + '</small>';
+            }
+        }
+
+        function clearVerify() {
+            document.getElementById('verify-input').value = '';
+            document.getElementById('verify-hash').value = '';
+            var resultEl = document.getElementById('verify-result');
+            resultEl.style.display = 'none';
+            resultEl.innerHTML = '';
+        }
+
+        // ===== 批量生成 =====
+        function batchMD5() {
+            var input = document.getElementById('batch-input').value;
+            var tbody = document.getElementById('batch-tbody');
+            var resultSection = document.getElementById('batch-result-section');
+            var copyBtn = document.getElementById('batch-copy-btn');
+
+            if (!input.trim()) {
+                utils.showError('请输入文本');
+                return;
+            }
+
+            var lines = input.split('\n');
+            var bits = document.querySelector('input[name="batch-bits"]:checked').value;
+            var casing = document.querySelector('input[name="batch-case"]:checked').value;
+
+            var rows = '';
+            for (var i = 0; i < lines.length; i++) {
+                var text = lines[i];
+                var hash = computeMD5(text);
+                var result = formatHash(hash, bits, casing);
+                rows += '<tr>' +
+                    '<td class="line-num">' + (i + 1) + '</td>' +
+                    '<td>' + escapeHtml(text || '&nbsp;') + '</td>' +
+                    '<td><div class="hash-cell"><span>' + result + '</span><button class="copy-icon-btn" onclick="copySingleHash(this)" title="复制">📋</button></div></td>' +
+                    '</tr>';
+            }
+
+            tbody.innerHTML = rows;
+            resultSection.style.display = 'block';
+            copyBtn.style.display = 'inline-block';
+        }
+
+        function clearBatch() {
+            document.getElementById('batch-input').value = '';
+            document.getElementById('batch-tbody').innerHTML = '';
+            document.getElementById('batch-result-section').style.display = 'none';
+            document.getElementById('batch-copy-btn').style.display = 'none';
+        }
+
+        function copyBatchResult() {
+            var tbody = document.getElementById('batch-tbody');
+            var rows = tbody.querySelectorAll('tr');
+            var text = '';
+            rows.forEach(function (row) {
+                var hashSpan = row.querySelector('.hash-cell span');
+                if (hashSpan) {
+                    text += hashSpan.textContent + '\n';
+                }
+            });
+
+            if (!text) {
+                utils.showError('请先生成批量结果');
+                return;
+            }
+
+            navigator.clipboard.writeText(text.trim()).then(function () {
+                utils.showSuccess('已复制全部 MD5 结果');
+            }).catch(function () {
+                utils.showError('复制失败，请手动复制');
+            });
+        }
+
+        // ===== 通用复制 =====
+        function copyResult(resultId) {
+            var resultEl = document.getElementById(resultId);
+            var textSpan = resultEl.querySelector('.result-text');
+            var text = textSpan.textContent;
+
+            if (!text || textSpan.classList.contains('result-placeholder')) return;
+
+            navigator.clipboard.writeText(text).then(function () {
+                var copyBtn = resultEl.querySelector('.copy-icon-btn');
+                copyBtn.classList.add('copied');
+                copyBtn.textContent = '✓';
+                setTimeout(function () {
+                    copyBtn.classList.remove('copied');
+                    copyBtn.textContent = '📋';
+                }, 1500);
+                utils.showSuccess('已复制');
+            }).catch(function () {
+                utils.showError('复制失败');
+            });
+        }
+
+        function copySingleHash(btn) {
+            var hash = btn.parentElement.querySelector('span').textContent;
+            navigator.clipboard.writeText(hash).then(function () {
+                btn.classList.add('copied');
+                btn.textContent = '✓';
+                setTimeout(function () {
+                    btn.classList.remove('copied');
+                    btn.textContent = '📋';
+                }, 1500);
+                utils.showSuccess('已复制');
+            }).catch(function () {
+                utils.showError('复制失败');
+            });
+        }
+
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+    <script src="../common/js/nav.js"></script>
+</body>
+
+</html>
