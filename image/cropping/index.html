@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="在线图片裁剪工具, 免费图片裁剪, 支持自由裁剪和固定比例裁剪, 实时预览, 本地处理保护隐私">
+    <meta name="keywords" content="图片裁剪, 在线裁剪图片, 图片裁切, 比例裁剪, 自由裁剪, 免费图片裁剪工具, 隐私图片裁剪">
+    <meta name="author" content="余一叶知秋尽">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片裁剪工具 - 工具系统</title>
+    <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
+    <style>
+        @import '../../common/css/style.css';
+    </style>
+    <style>
+        .container {
+            max-width: 1200px;
+            padding: 40px 0;
+            width: 1000px;
+            margin: 0 auto;
+        }
+
+        .tool-layout {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* ====== Upload ====== */
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fff;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            border-color: #4f46e5;
+            background: #eef2ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #4f46e5;
+            background: #eef2ff;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        .upload-area .upload-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .upload-area .upload-text {
+            font-size: 15px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .upload-area .upload-hint {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 6px;
+        }
+
+        /* ====== Crop Editor ====== */
+        .crop-editor {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .crop-editor .editor-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .crop-editor .editor-header h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .crop-container-wrapper {
+            position: relative;
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            max-height: 600px;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .crop-container-wrapper.no-image {
+            background: #f1f5f9;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        #crop-container {
+            position: relative;
+            display: inline-block;
+            cursor: crosshair;
+        }
+
+        #crop-image {
+            display: block;
+            max-width: 100%;
+            max-height: 560px;
+            pointer-events: none;
+        }
+
+        /* Crop overlay */
+        .crop-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .crop-mask {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.55);
+            pointer-events: none;
+        }
+
+        .crop-mask.top {
+            left: 0;
+            right: 0;
+        }
+
+        .crop-mask.bottom {
+            left: 0;
+            right: 0;
+        }
+
+        .crop-mask.left {
+            top: 0;
+            bottom: 0;
+        }
+
+        .crop-mask.right {
+            top: 0;
+            bottom: 0;
+        }
+
+        .crop-box {
+            position: absolute;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3), 0 0 0 9999px rgba(0, 0, 0, 0.45);
+            cursor: move;
+            pointer-events: auto;
+        }
+
+        .crop-box::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border: 1px dashed rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+        }
+
+        .crop-grid {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .crop-grid-line {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .crop-grid-line.h {
+            left: 0;
+            right: 0;
+            height: 1px;
+            top: 33.33%;
+        }
+
+        .crop-grid-line.h:nth-child(2) {
+            top: 66.66%;
+        }
+
+        .crop-grid-line.v {
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            left: 33.33%;
+        }
+
+        .crop-grid-line.v:nth-child(4) {
+            left: 66.66%;
+        }
+
+        /* Resize handles */
+        .crop-handle {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border: 2px solid #4f46e5;
+            border-radius: 6px;
+            pointer-events: auto;
+            z-index: 5;
+        }
+
+        .crop-handle.nw {
+            top: -7px;
+            left: -7px;
+            cursor: nw-resize;
+        }
+
+        .crop-handle.n {
+            top: -7px;
+            left: 50%;
+            margin-left: -7px;
+            cursor: n-resize;
+        }
+
+        .crop-handle.ne {
+            top: -7px;
+            right: -7px;
+            cursor: ne-resize;
+        }
+
+        .crop-handle.e {
+            top: 50%;
+            right: -7px;
+            margin-top: -7px;
+            cursor: e-resize;
+        }
+
+        .crop-handle.se {
+            bottom: -7px;
+            right: -7px;
+            cursor: se-resize;
+        }
+
+        .crop-handle.s {
+            bottom: -7px;
+            left: 50%;
+            margin-left: -7px;
+            cursor: s-resize;
+        }
+
+        .crop-handle.sw {
+            bottom: -7px;
+            left: -7px;
+            cursor: sw-resize;
+        }
+
+        .crop-handle.w {
+            top: 50%;
+            left: -7px;
+            margin-top: -7px;
+            cursor: w-resize;
+        }
+
+        .crop-info {
+            display: flex;
+            gap: 20px;
+            padding: 10px 20px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 12px;
+            color: #64748b;
+            flex-wrap: wrap;
+        }
+
+        .crop-info span {
+            white-space: nowrap;
+        }
+
+        .crop-info b {
+            color: #1e293b;
+        }
+
+        /* ====== Side Panel ====== */
+        .side-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .panel-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            padding: 20px;
+        }
+
+        .panel-card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 14px;
+        }
+
+        .ratio-presets {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .ratio-btn {
+            padding: 8px 4px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            color: #475569;
+            transition: all 0.15s ease;
+            text-align: center;
+        }
+
+        .ratio-btn:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .ratio-btn.active {
+            background: #eef2ff;
+            border-color: #4f46e5;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+
+        .ratio-custom-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .ratio-custom-row input {
+            width: 70px;
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .ratio-custom-row input:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        .ratio-custom-row span {
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .ratio-custom-row button {
+            padding: 8px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            color: #475569;
+            transition: all 0.15s;
+        }
+
+        .ratio-custom-row button:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .dim-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .dim-row label {
+            font-size: 13px;
+            color: #64748b;
+            width: 36px;
+            flex-shrink: 0;
+        }
+
+        .dim-row input {
+            flex: 1;
+            padding: 8px 10px;
+            width: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .dim-row input:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        .dim-row .unit {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        /* Preview */
+        .preview-box {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #1e293b;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            min-height: 120px;
+        }
+
+        .preview-box canvas {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .preview-placeholder {
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        .format-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 10px;
+            background: #fff;
+        }
+
+        .format-select:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+
+        .btn-outline {
+            background: #fff;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            margin-top: 8px;
+        }
+
+        .btn-outline:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 900px) {
+            .tool-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 24px 16px;
+            }
+
+            .crop-container-wrapper {
+                max-height: 400px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <a href="../../index.html">
+                <span class="brand-icon">⚡</span>
+                工具系统
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">图片工具</div>
+            <a href="../../image/compressor/index.html">
+                <span class="nav-icon">📦</span>图片压缩
+            </a>
+            <a href="../../image/convert/index.html">
+                <span class="nav-icon">🔄</span>格式转换
+            </a>
+            <a href="../../image/watermark/index.html">
+                <span class="nav-icon">💧</span>图片水印
+            </a>
+            <a href="../../image/cropping/index.html" class="active">
+                <span class="nav-icon">✂️</span>图片裁剪
+            </a>
+
+            <div class="nav-section">视频工具</div>
+            <a href="../../video/cropping/index.html">
+                <span class="nav-icon">✂️</span>视频裁剪
+            </a>
+            <a href="../../video/watermark/index.html">
+                <span class="nav-icon">🎥</span>视频水印
+            </a>
+
+            <div class="nav-section">数据 & 开发</div>
+            <a href="../../json/index.html">
+                <span class="nav-icon">{ }</span>JSON 格式化
+            </a>
+            <a href="../../yaml/index.html">
+                <span class="nav-icon">⚙️</span>YAML 格式化
+            </a>
+            <a href="../../pug/index.html">
+                <span class="nav-icon">🌿</span>Pug 格式化
+            </a>
+            <a href="../../pwd/index.html">
+                <span class="nav-icon">🔑</span>密码生成
+            </a>
+            <a href="../../uuid/index.html">
+                <span class="nav-icon">🆔</span>UUID 生成
+            </a>
+            <a href="../../diagrams/mermaid/index.html">
+                <span class="nav-icon">📊</span>Mermaid 图表
+            </a>
+            <a href="../../md5/index.html">
+                <span class="nav-icon">🔐</span>MD5 加密
+            </a>
+            <a href="../../token/index.html">
+                <span class="nav-icon">🎫</span>Token 工具
+            </a>
+
+            <div class="nav-section">文档 & 下载</div>
+            <a href="../../docu/signature/index.html">
+                <span class="nav-icon">✍️</span>签名工具
+            </a>
+            <a href="../../docu/watermark/index.html">
+                <span class="nav-icon">🛡️</span>文档水印
+            </a>
+            <a href="../../download/index.html">
+                <span class="nav-icon">⬇️</span>批量下载
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <p>纯前端运行 · 数据本地处理</p>
+        </div>
+    </aside>
+
+    <main class="main">
+        <section class="page-hero">
+            <h1>图片裁剪工具</h1>
+            <p>支持自由裁剪和固定比例裁剪，实时预览裁剪效果，纯前端运行保护数据安全</p>
+        </section>
+        <div class="top-ad">
+            <amp-ad width="970" height="90" type="adsense" data-ad-client="ca-pub-2048978820706528"
+                data-ad-slot="7740281459" data-auto-format="rspv" data-full-width="" layout="responsive">
+            </amp-ad>
+        </div>
+
+        <div class="container">
+            <input type="file" id="file-input" accept="image/*" style="display:none;">
+
+            <div id="upload-section" class="upload-area" onclick="document.getElementById('file-input').click()">
+                <div class="upload-icon">🖼️</div>
+                <div class="upload-text">点击上传或拖拽图片到此处</div>
+                <div class="upload-hint">支持 JPG、PNG、WebP、GIF、BMP 格式</div>
+            </div>
+
+            <div class="tool-layout" id="editor-section" style="display:none;">
+                <div class="crop-editor">
+                    <div class="editor-header">
+                        <h3>裁剪区域</h3>
+                        <button class="btn" style="width:auto;padding:6px 14px;font-size:12px;font-weight:500;"
+                            onclick="resetCrop()">重置裁剪框</button>
+                    </div>
+
+                    <div class="crop-container-wrapper" id="crop-wrapper">
+                        <div id="crop-container">
+                            <img id="crop-image" alt="裁剪图片">
+                            <div class="crop-overlay" id="crop-overlay">
+                                <div class="crop-box" id="crop-box">
+                                    <div class="crop-grid">
+                                        <div class="crop-grid-line h"></div>
+                                        <div class="crop-grid-line h"></div>
+                                        <div class="crop-grid-line v"></div>
+                                        <div class="crop-grid-line v"></div>
+                                    </div>
+                                    <div class="crop-handle nw" data-handle="nw"></div>
+                                    <div class="crop-handle n" data-handle="n"></div>
+                                    <div class="crop-handle ne" data-handle="ne"></div>
+                                    <div class="crop-handle e" data-handle="e"></div>
+                                    <div class="crop-handle se" data-handle="se"></div>
+                                    <div class="crop-handle s" data-handle="s"></div>
+                                    <div class="crop-handle sw" data-handle="sw"></div>
+                                    <div class="crop-handle w" data-handle="w"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="crop-info">
+                        <span>选区位置：<b id="info-pos">-</b></span>
+                        <span>选区大小：<b id="info-size">-</b></span>
+                        <span>图片尺寸：<b id="info-original">-</b></span>
+                    </div>
+                </div>
+
+                <div class="side-panel">
+                    <div class="panel-card">
+                        <h4>裁剪比例</h4>
+                        <div class="ratio-presets" id="ratio-presets">
+                            <button class="ratio-btn active" data-ratio="free">自由</button>
+                            <button class="ratio-btn" data-ratio="1:1">1:1</button>
+                            <button class="ratio-btn" data-ratio="4:3">4:3</button>
+                            <button class="ratio-btn" data-ratio="3:2">3:2</button>
+                            <button class="ratio-btn" data-ratio="16:9">16:9</button>
+                            <button class="ratio-btn" data-ratio="3:4">3:4</button>
+                            <button class="ratio-btn" data-ratio="2:3">2:3</button>
+                            <button class="ratio-btn" data-ratio="9:16">9:16</button>
+                            <button class="ratio-btn" data-ratio="custom">自定义</button>
+                        </div>
+                        <div class="ratio-custom-row" id="custom-ratio-row" style="display:none;">
+                            <input type="number" id="ratio-w" value="16" min="1" max="100">
+                            <span>:</span>
+                            <input type="number" id="ratio-h" value="9" min="1" max="100">
+                            <button onclick="applyCustomRatio()">应用</button>
+                        </div>
+                    </div>
+
+                    <div class="panel-card">
+                        <h4>精确尺寸（px）</h4>
+                        <div class="dim-row">
+                            <label>X</label>
+                            <input type="number" id="dim-x" min="0" onchange="updateCropFromDims()">
+                            <span class="unit">px</span>
+                            <label>Y</label>
+                            <input type="number" id="dim-y" min="0" onchange="updateCropFromDims()">
+                            <span class="unit">px</span>
+                        </div>
+                        <div class="dim-row">
+                            <label>W</label>
+                            <input type="number" id="dim-w" min="1" onchange="updateCropFromDims()">
+                            <span class="unit">px</span>
+                            <label>H</label>
+                            <input type="number" id="dim-h" min="1" onchange="updateCropFromDims()">
+                            <span class="unit">px</span>
+                        </div>
+                    </div>
+
+                    <div class="panel-card">
+                        <h4>裁剪预览</h4>
+                        <div class="preview-box" id="preview-box">
+                            <canvas id="preview-canvas"></canvas>
+                            <span class="preview-placeholder" id="preview-placeholder">上传图片后预览</span>
+                        </div>
+                        <select class="format-select" id="output-format">
+                            <option value="image/png">PNG</option>
+                            <option value="image/jpeg" selected>JPG</option>
+                            <option value="image/webp">WebP</option>
+                        </select>
+                        <button class="btn btn-primary" id="download-btn" disabled
+                            onclick="downloadCrop()">下载裁剪图片</button>
+                        <button class="btn btn-outline" id="upload-new-btn"
+                            onclick="document.getElementById('file-input').click()">重新上传图片</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2026 工具系统. PengLine 保留所有权利.</p>
+        </footer>
+    </main>
+
+    <script src="../../common/js/utils.js"></script>
+    <script>
+        var imgNaturalW = 0;
+        var imgNaturalH = 0;
+        var displayScale = 1;
+        var currentRatio = null; // {w, h} or null for free
+
+        var cropBox = document.getElementById('crop-box');
+        var cropImage = document.getElementById('crop-image');
+        var cropOverlay = document.getElementById('crop-overlay');
+        var previewCanvas = document.getElementById('preview-canvas');
+        var previewPlaceholder = document.getElementById('preview-placeholder');
+        var downloadBtn = document.getElementById('download-btn');
+
+        // ===== Upload =====
+        var fileInput = document.getElementById('file-input');
+        var uploadSection = document.getElementById('upload-section');
+        var editorSection = document.getElementById('editor-section');
+
+        fileInput.addEventListener('change', function (e) {
+            if (e.target.files.length) loadImage(e.target.files[0]);
+        });
+
+        uploadSection.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            uploadSection.classList.add('dragover');
+        });
+        uploadSection.addEventListener('dragleave', function () {
+            uploadSection.classList.remove('dragover');
+        });
+        uploadSection.addEventListener('drop', function (e) {
+            e.preventDefault();
+            uploadSection.classList.remove('dragover');
+            if (e.dataTransfer.files.length) loadImage(e.dataTransfer.files[0]);
+        });
+
+        function loadImage(file) {
+            if (!file.type.match(/image\//)) {
+                utils.showError('请选择图片文件');
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                cropImage.onload = function () {
+                    imgNaturalW = cropImage.naturalWidth;
+                    imgNaturalH = cropImage.naturalHeight;
+                    initEditor();
+                };
+                cropImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function initEditor() {
+            uploadSection.style.display = 'none';
+            editorSection.style.display = 'grid';
+            downloadBtn.disabled = false;
+
+            // Position crop box (80% of image, centered)
+            var boxW = imgNaturalW * 0.7;
+            var boxH = imgNaturalH * 0.7;
+            var boxX = (imgNaturalW - boxW) / 2;
+            var boxY = (imgNaturalH - boxH) / 2;
+
+            updateDisplayScale();
+            setCropBox(boxX, boxY, boxW, boxH);
+            updatePreview();
+            updateInfoDisplay();
+        }
+
+        function updateDisplayScale() {
+            var wrapper = document.getElementById('crop-wrapper');
+            var maxW = wrapper.clientWidth - 20;
+            var maxH = 560;
+
+            var scaleW = maxW / imgNaturalW;
+            var scaleH = maxH / imgNaturalH;
+            displayScale = Math.min(scaleW, scaleH, 1);
+
+            cropImage.style.width = (imgNaturalW * displayScale) + 'px';
+            cropImage.style.height = (imgNaturalH * displayScale) + 'px';
+
+            cropOverlay.style.width = cropImage.style.width;
+            cropOverlay.style.height = cropImage.style.height;
+        }
+
+        // ===== Crop Box =====
+        function setCropBox(x, y, w, h) {
+            cropBox.style.left = (x * displayScale) + 'px';
+            cropBox.style.top = (y * displayScale) + 'px';
+            cropBox.style.width = (w * displayScale) + 'px';
+            cropBox.style.height = (h * displayScale) + 'px';
+            updateDimInputs();
+            updateInfoDisplay();
+        }
+
+        function getCropNatural() {
+            var left = parseFloat(cropBox.style.left) / displayScale;
+            var top = parseFloat(cropBox.style.top) / displayScale;
+            var w = parseFloat(cropBox.style.width) / displayScale;
+            var h = parseFloat(cropBox.style.height) / displayScale;
+            return {
+                x: Math.round(Math.max(0, Math.min(left, imgNaturalW))),
+                y: Math.round(Math.max(0, Math.min(top, imgNaturalH))),
+                w: Math.round(Math.min(w, imgNaturalW)),
+                h: Math.round(Math.min(h, imgNaturalH))
+            };
+        }
+
+        function constrainToImage(x, y, w, h) {
+            if (x < 0) { w += x; x = 0; }
+            if (y < 0) { h += y; y = 0; }
+            if (x + w > imgNaturalW) w = imgNaturalW - x;
+            if (y + h > imgNaturalH) h = imgNaturalH - y;
+            return { x: Math.max(0, x), y: Math.max(0, y), w: Math.max(10, w), h: Math.max(10, h) };
+        }
+
+        // ===== Drag & Resize =====
+        var dragging = null;
+        var dragStart = {};
+        var cropStart = {};
+
+        cropBox.addEventListener('mousedown', function (e) {
+            if (e.target.classList.contains('crop-handle')) return;
+            e.preventDefault();
+            dragging = 'move';
+            dragStart = { x: e.clientX, y: e.clientY };
+            var c = getCropNatural();
+            cropStart = { x: c.x, y: c.y };
+        });
+
+        document.querySelectorAll('.crop-handle').forEach(function (handle) {
+            handle.addEventListener('mousedown', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dragging = handle.dataset.handle;
+                dragStart = { x: e.clientX, y: e.clientY };
+                var c = getCropNatural();
+                cropStart = { x: c.x, y: c.y, w: c.w, h: c.h };
+            });
+        });
+
+        document.addEventListener('mousemove', function (e) {
+            if (!dragging) return;
+
+            var dx = (e.clientX - dragStart.x) / displayScale;
+            var dy = (e.clientY - dragStart.y) / displayScale;
+
+            var c = getCropNatural();
+            var newX = c.x, newY = c.y, newW = c.w, newH = c.h;
+
+            if (dragging === 'move') {
+                newX = cropStart.x + dx;
+                newY = cropStart.y + dy;
+            } else {
+                // Resize based on handle
+                var r = currentRatio;
+                var handle = dragging;
+
+                if (handle.indexOf('e') !== -1) {
+                    newW = cropStart.w + dx;
+                }
+                if (handle.indexOf('w') !== -1) {
+                    newW = cropStart.w - dx;
+                    newX = cropStart.x + dx;
+                }
+                if (handle.indexOf('s') !== -1) {
+                    newH = cropStart.h + dy;
+                }
+                if (handle.indexOf('n') !== -1) {
+                    newH = cropStart.h - dy;
+                    newY = cropStart.y + dy;
+                }
+
+                // Apply aspect ratio constraint
+                if (r) {
+                    if (handle === 'n' || handle === 's') {
+                        newW = newH * r.w / r.h;
+                    } else if (handle === 'e' || handle === 'w') {
+                        newH = newW * r.h / r.w;
+                    } else {
+                        // Corner: prefer the larger change
+                        var dw = Math.abs(newW - cropStart.w);
+                        var dh = Math.abs(newH - cropStart.h);
+                        if (dw > dh) {
+                            newH = newW * r.h / r.w;
+                        } else {
+                            newW = newH * r.w / r.h;
+                        }
+                    }
+                }
+
+                // Min size
+                if (newW < 10) newW = 10;
+                if (newH < 10) newH = 10;
+            }
+
+            var constrained = constrainToImage(newX, newY, newW, newH);
+            setCropBox(constrained.x, constrained.y, constrained.w, constrained.h);
+            updatePreview();
+        });
+
+        document.addEventListener('mouseup', function () {
+            if (dragging) {
+                dragging = null;
+                updatePreview();
+                updateDimInputs();
+            }
+        });
+
+        // ===== Aspect Ratio =====
+        document.getElementById('ratio-presets').addEventListener('click', function (e) {
+            if (!e.target.classList.contains('ratio-btn')) return;
+
+            document.querySelectorAll('#ratio-presets .ratio-btn').forEach(function (b) { b.classList.remove('active'); });
+            e.target.classList.add('active');
+
+            var ratio = e.target.dataset.ratio;
+            var customRow = document.getElementById('custom-ratio-row');
+
+            if (ratio === 'free') {
+                currentRatio = null;
+                customRow.style.display = 'none';
+            } else if (ratio === 'custom') {
+                customRow.style.display = 'flex';
+                applyCustomRatio();
+            } else {
+                customRow.style.display = 'none';
+                var parts = ratio.split(':');
+                currentRatio = { w: parseInt(parts[0]), h: parseInt(parts[1]) };
+                // Resize crop box to match ratio
+                applyRatioToCurrentCrop();
+            }
+        });
+
+        function applyCustomRatio() {
+            var w = parseInt(document.getElementById('ratio-w').value) || 16;
+            var h = parseInt(document.getElementById('ratio-h').value) || 9;
+            currentRatio = { w: w, h: h };
+            applyRatioToCurrentCrop();
+        }
+
+        function applyRatioToCurrentCrop() {
+            if (!currentRatio) return;
+            var c = getCropNatural();
+            var newW = c.w;
+            var newH = newW * currentRatio.h / currentRatio.w;
+            if (newH > imgNaturalH) {
+                newH = imgNaturalH;
+                newW = newH * currentRatio.w / currentRatio.h;
+            }
+            var x = c.x + (c.w - newW) / 2;
+            var y = c.y + (c.h - newH) / 2;
+            var constrained = constrainToImage(x, y, newW, newH);
+            setCropBox(constrained.x, constrained.y, constrained.w, constrained.h);
+            updatePreview();
+        }
+
+        // ===== Dimension Inputs =====
+        function updateDimInputs() {
+            var c = getCropNatural();
+            document.getElementById('dim-x').value = c.x;
+            document.getElementById('dim-y').value = c.y;
+            document.getElementById('dim-w').value = c.w;
+            document.getElementById('dim-h').value = c.h;
+        }
+
+        function updateCropFromDims() {
+            var x = parseInt(document.getElementById('dim-x').value) || 0;
+            var y = parseInt(document.getElementById('dim-y').value) || 0;
+            var w = parseInt(document.getElementById('dim-w').value) || 100;
+            var h = parseInt(document.getElementById('dim-h').value) || 100;
+
+            if (currentRatio) {
+                h = Math.round(w * currentRatio.h / currentRatio.w);
+                document.getElementById('dim-h').value = h;
+            }
+
+            var constrained = constrainToImage(x, y, w, h);
+            setCropBox(constrained.x, constrained.y, constrained.w, constrained.h);
+            updatePreview();
+        }
+
+        function updateInfoDisplay() {
+            var c = getCropNatural();
+            document.getElementById('info-pos').textContent = 'X:' + c.x + ' Y:' + c.y;
+            document.getElementById('info-size').textContent = c.w + ' × ' + c.h + ' px';
+            document.getElementById('info-original').textContent = imgNaturalW + ' × ' + imgNaturalH + ' px';
+        }
+
+        // ===== Preview =====
+        function updatePreview() {
+            if (!imgNaturalW) return;
+
+            var c = getCropNatural();
+            var canvas = previewCanvas;
+            var ctx = canvas.getContext('2d');
+
+            var previewSize = 280;
+            var scale = previewSize / Math.max(c.w, c.h);
+
+            canvas.width = c.w * scale;
+            canvas.height = c.h * scale;
+            canvas.style.display = 'block';
+
+            if (previewPlaceholder) previewPlaceholder.style.display = 'none';
+
+            ctx.drawImage(cropImage, c.x, c.y, c.w, c.h, 0, 0, canvas.width, canvas.height);
+        }
+
+        // ===== Download =====
+        function downloadCrop() {
+            var c = getCropNatural();
+            var format = document.getElementById('output-format').value;
+
+            var canvas = document.createElement('canvas');
+            canvas.width = c.w;
+            canvas.height = c.h;
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(cropImage, c.x, c.y, c.w, c.h, 0, 0, c.w, c.h);
+
+            var ext = format === 'image/png' ? 'png' : format === 'image/webp' ? 'webp' : 'jpg';
+            var quality = format === 'image/png' ? undefined : 0.92;
+
+            canvas.toBlob(function (blob) {
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'pengline' + Date.now() + '.' + ext;
+                a.click();
+                URL.revokeObjectURL(url);
+                utils.showSuccess('裁剪图片已下载');
+            }, format, quality);
+        }
+
+        function resetCrop() {
+            var boxW = imgNaturalW * 0.7;
+            var boxH = imgNaturalH * 0.7;
+            var boxX = (imgNaturalW - boxW) / 2;
+            var boxY = (imgNaturalH - boxH) / 2;
+            setCropBox(boxX, boxY, boxW, boxH);
+            updatePreview();
+        }
+
+        // Resize handler
+        window.addEventListener('resize', function () {
+            if (!imgNaturalW) return;
+            var c = getCropNatural();
+            updateDisplayScale();
+            setCropBox(c.x, c.y, c.w, c.h);
+        });
+    </script>
+    <script src="../../common/js/nav.js"></script>
+</body>
+
+</html>
