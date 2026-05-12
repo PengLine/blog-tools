@@ -34,6 +34,18 @@
     let outputBlob = null;
     let cancelConversion = false;
 
+    // FFmpeg.wasm lazy init
+    let ffmpegInstance = null;
+    let ffmpegLoading = false;
+    let ffmpegLoadError = null;
+
+    // Formats that require FFmpeg (not supported by browser MediaRecorder)
+    const FFMPEG_FORMATS = ['wmv', 'mov', 'avi', 'mkv'];
+
+    function needsFFmpeg(fmt) {
+        return FFMPEG_FORMATS.indexOf(fmt) !== -1;
+    }
+
     function showModal(msg) {
         modalMessage.textContent = msg;
         modal.classList.add('active');
@@ -76,6 +88,24 @@
         return { width: Math.round(origW * pct), height: Math.round(origH * pct) };
     }
 
+    function getOutputMimeType(fmt) {
+        var map = {
+            'webm': 'video/webm',
+            'webm-vp9': 'video/webm',
+            'mp4': 'video/mp4',
+            'wmv': 'video/x-ms-wmv',
+            'mov': 'video/quicktime',
+            'avi': 'video/x-msvideo',
+            'mkv': 'video/x-matroska'
+        };
+        return map[fmt] || 'video/webm';
+    }
+
+    function getOutputExtension(fmt) {
+        if (fmt === 'webm-vp9') return 'webm';
+        return fmt;
+    }
+
     function getSupportedMime() {
         var fmt = outputFormat.value;
         var codecs = [];
@@ -95,21 +125,31 @@
     }
 
     function updateFormatInfo() {
-        var mime = getSupportedMime();
-        var ext = mime.startsWith('video/mp4') ? 'mp4' : 'webm';
+        var fmt = outputFormat.value;
         var msg;
-        if (ext === 'mp4') {
-            msg = '将输出 MP4 (H.264) 格式，兼容大多数播放器和设备';
-        } else if (mime.includes('vp9')) {
-            msg = '将输出 WebM (VP9) 格式，体积更小但转换较慢';
+        if (needsFFmpeg(fmt)) {
+            var labels = { wmv: 'WMV', mov: 'MOV', avi: 'AVI', mkv: 'MKV' };
+            msg = '将使用 FFmpeg 引擎输出 ' + (labels[fmt] || fmt.toUpperCase()) + ' 格式（首次使用需下载约30MB引擎文件）';
         } else {
-            msg = '将输出 WebM (VP8) 格式，兼容性良好';
-        }
-        if ((outputFormat.value === 'mp4' && ext !== 'mp4') ||
-            (outputFormat.value === 'webm-vp9' && !mime.includes('vp9'))) {
-            msg += '（注意：浏览器不支持所选编码，已自动降级）';
+            var mime = getSupportedMime();
+            if (mime.startsWith('video/mp4')) {
+                msg = '将输出 MP4 (H.264) 格式，兼容大多数播放器和设备';
+            } else if (mime.includes('vp9')) {
+                msg = '将输出 WebM (VP9) 格式，体积更小但转换较慢';
+            } else {
+                msg = '将输出 WebM (VP8) 格式，兼容性良好';
+            }
+            if ((fmt === 'mp4' && !mime.startsWith('video/mp4')) ||
+                (fmt === 'webm-vp9' && !mime.includes('vp9'))) {
+                msg += '（注意：浏览器不支持所选编码，已自动降级）';
+            }
         }
         formatInfoText.textContent = msg;
+
+        // Dim quality preset for FFmpeg formats (quality controlled by bitrate directly)
+        var isFFmpeg = needsFFmpeg(fmt);
+        var qualityRow = document.getElementById('videoQuality').closest('.setting-row');
+        if (qualityRow) qualityRow.style.opacity = isFFmpeg ? '0.5' : '';
     }
 
     outputFormat.addEventListener('change', updateFormatInfo);
@@ -134,22 +174,39 @@
         var url = URL.createObjectURL(file);
         videoPlayer.src = url;
 
+        // Timeout: if metadata never loads (e.g. TS files), show info anyway
+        var metadataTimeout = setTimeout(function () {
+            if (videoPlayer.readyState < 1) {
+                showFileInfo(file);
+            }
+        }, 3000);
         videoPlayer.onloadedmetadata = function () {
+            clearTimeout(metadataTimeout);
+            showFileInfo(file);
+        };
+        videoPlayer.onerror = function () {
+            clearTimeout(metadataTimeout);
+            showFileInfo(file);
+        };
+
+        function showFileInfo(file) {
             var ext = getExtension(file.name);
-            var w = videoPlayer.videoWidth;
-            var h = videoPlayer.videoHeight;
-            var dur = videoPlayer.duration;
+            var w = videoPlayer.videoWidth || 0;
+            var h = videoPlayer.videoHeight || 0;
+            var dur = videoPlayer.duration || 0;
+            var browserPlays = videoPlayer.readyState >= 2;
             videoInfo.innerHTML =
                 '<p><strong>文件名：</strong>' + file.name + '</p>' +
                 '<p><strong>原始格式：</strong>' + ext.toUpperCase() + ' | ' +
-                '<strong>分辨率：</strong>' + w + 'x' + h + ' | ' +
-                '<strong>时长：</strong>' + formatDuration(dur) + ' | ' +
-                '<strong>大小：</strong>' + formatSize(file.size) + '</p>';
+                '<strong>分辨率：</strong>' + (w && h ? w + 'x' + h : '未知（需FFmpeg解码）') + ' | ' +
+                '<strong>时长：</strong>' + (dur ? formatDuration(dur) : '未知') + ' | ' +
+                '<strong>大小：</strong>' + formatSize(file.size) + '</p>' +
+                (browserPlays ? '' : '<p style="color:#e67e22;">* 浏览器无法直接播放此格式，将使用 FFmpeg 引擎转换</p>');
             settingsSection.style.display = '';
             updateFormatInfo();
-            customWidth.value = w;
+            if (w) customWidth.value = w;
             convertBtn.disabled = false;
-        };
+        }
     });
 
     function resetAll() {
@@ -163,6 +220,225 @@
         convertNote.style.display = 'none';
     }
 
+    // ---- FFmpeg.wasm ----
+    async function getFFmpeg() {
+        if (ffmpegInstance) return ffmpegInstance;
+        if (ffmpegLoadError) throw new Error(ffmpegLoadError);
+        if (ffmpegLoading) {
+            return new Promise(function (resolve, reject) {
+                var check = setInterval(function () {
+                    if (ffmpegInstance) { clearInterval(check); resolve(ffmpegInstance); }
+                    if (ffmpegLoadError) { clearInterval(check); reject(new Error(ffmpegLoadError)); }
+                }, 200);
+            });
+        }
+        ffmpegLoading = true;
+        convertNote.textContent = '正在加载 FFmpeg 引擎（约30MB，首次加载）...';
+        try {
+            if (typeof FFmpegWASM === 'undefined') {
+                throw new Error('FFmpeg 脚本未加载，请检查网络连接后刷新页面。');
+            }
+            var FFmpeg = FFmpegWASM.FFmpeg;
+            var ffmpeg = new FFmpeg();
+            ffmpeg.on('log', function (e) { console.log('[ffmpeg]', e.message); });
+            ffmpeg.on('progress', function (e) {
+                var pct = Math.min(Math.round(e.progress * 100), 99);
+                progressBar.style.width = pct + '%';
+                progressPercentage.textContent = pct + '%';
+            });
+            await ffmpeg.load({
+                coreURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js'
+            });
+            ffmpegInstance = ffmpeg;
+            convertNote.textContent = 'FFmpeg 引擎就绪，开始转换...';
+        } catch (e) {
+            ffmpegLoadError = e.message || 'FFmpeg 加载失败';
+            throw new Error(ffmpegLoadError);
+        } finally {
+            ffmpegLoading = false;
+        }
+        return ffmpegInstance;
+    }
+
+    async function convertWithFFmpeg(file, fmt, targetRes, fpsSelect, includeAudio) {
+        var ffmpeg = await getFFmpeg();
+        var ext = getExtension(file.name);
+        var inputName = 'input.' + ext;
+        var outputName = 'output.' + getOutputExtension(fmt);
+        var videoBitrateVal = getQualityBitrate();
+
+        // Write input
+        var inputData = new Uint8Array(await file.arrayBuffer());
+        await ffmpeg.writeFile(inputName, inputData);
+
+        // Build args
+        var args = ['-i', inputName];
+
+        // Video codec
+        switch (fmt) {
+            case 'wmv':
+                args.push('-c:v', 'wmv2', '-c:a', 'wmav2');
+                break;
+            case 'mov':
+                args.push('-c:v', 'libx264', '-c:a', 'aac', '-strict', 'experimental');
+                break;
+            case 'avi':
+                args.push('-c:v', 'libx264', '-c:a', 'aac', '-strict', 'experimental');
+                break;
+            case 'mkv':
+                args.push('-c:v', 'libx264', '-c:a', 'aac', '-strict', 'experimental');
+                break;
+            default:
+                args.push('-c:v', 'libx264', '-c:a', 'aac', '-strict', 'experimental');
+        }
+
+        // Bitrate
+        args.push('-b:v', videoBitrateVal + 'k');
+
+        // Resolution
+        if (targetRes.width && targetRes.height) {
+            args.push('-vf', 'scale=' + targetRes.width + ':' + targetRes.height);
+        }
+
+        // FPS
+        if (fpsSelect > 0) {
+            args.push('-r', String(fpsSelect));
+        }
+
+        // Audio
+        if (!includeAudio) {
+            args.push('-an');
+        }
+
+        args.push('-y', outputName);
+
+        // Execute
+        await ffmpeg.exec(args);
+
+        // Read output
+        var data = await ffmpeg.readFile(outputName);
+        var mime = getOutputMimeType(fmt);
+        var blob = new Blob([data.buffer], { type: mime });
+
+        // Cleanup virtual FS
+        try { await ffmpeg.deleteFile(inputName); } catch (e) { }
+        try { await ffmpeg.deleteFile(outputName); } catch (e) { }
+
+        return blob;
+    }
+
+    // ---- Browser MediaRecorder ----
+    function convertWithMediaRecorder(video, targetRes, fpsSelect, includeAudio, videoBitrateVal) {
+        return new Promise(function (resolve, reject) {
+            var duration = video.duration;
+            var origW = video.videoWidth;
+            var origH = video.videoHeight;
+            var needsCanvas = (targetRes.width !== origW || targetRes.height !== origH || fpsSelect > 0);
+            var canvas = previewCanvas;
+            var ctx;
+            var chunks = [];
+            var recorder;
+            var startTime = Date.now();
+
+            if (needsCanvas) {
+                canvas.width = targetRes.width;
+                canvas.height = targetRes.height;
+                ctx = canvas.getContext('2d');
+            }
+
+            video.muted = true;
+            video.playsInline = true;
+            video.controls = false;
+            video.currentTime = 0;
+
+            video.play().then(function () {
+                convertNote.textContent = '转换中...';
+                var sourceStream;
+                try {
+                    sourceStream = video.captureStream(fpsSelect || undefined);
+                } catch (e) {
+                    sourceStream = video.captureStream();
+                }
+
+                if (sourceStream.getVideoTracks().length === 0) {
+                    reject(new Error('无法获取视频轨道'));
+                    return;
+                }
+
+                if (needsCanvas) {
+                    var canvasStream = canvas.captureStream(fpsSelect || 30);
+                    var combined = new MediaStream();
+                    combined.addTrack(canvasStream.getVideoTracks()[0]);
+                    if (includeAudio) {
+                        sourceStream.getAudioTracks().forEach(function (t) { combined.addTrack(t); });
+                    }
+                    sourceStream = combined;
+                } else if (!includeAudio) {
+                    sourceStream.getAudioTracks().forEach(function (t) { t.stop(); });
+                }
+
+                var mimeType = getSupportedMime();
+                try {
+                    recorder = new MediaRecorder(sourceStream, { mimeType: mimeType, videoBitsPerSecond: videoBitrateVal });
+                } catch (e) {
+                    recorder = new MediaRecorder(sourceStream, { mimeType: 'video/webm', videoBitsPerSecond: videoBitrateVal });
+                }
+
+                recorder.ondataavailable = function (e) {
+                    if (e.data && e.data.size > 0) chunks.push(e.data);
+                };
+
+                recorder.onstop = function () {
+                    var actualMime = recorder.mimeType || mimeType || 'video/webm';
+                    var blob = new Blob(chunks, { type: actualMime });
+                    video.controls = true;
+                    video.onended = null;
+                    if (blob.size === 0) {
+                        reject(new Error('输出为空，浏览器可能不支持该视频编码'));
+                    } else {
+                        resolve({ blob: blob, ext: actualMime.startsWith('video/mp4') ? 'mp4' : 'webm' });
+                    }
+                };
+
+                recorder.onerror = function (e) {
+                    reject(new Error('录制出错：' + (e.error ? e.error.message : '未知错误')));
+                };
+
+                recorder.start(250);
+
+                if (needsCanvas) {
+                    (function drawLoop() {
+                        if (cancelConversion || video.ended || (video.paused && video.currentTime >= duration - 0.2)) return;
+                        ctx.drawImage(video, 0, 0, targetRes.width, targetRes.height);
+                        requestAnimationFrame(drawLoop);
+                    })();
+                }
+
+                (function monitorProgress() {
+                    if (cancelConversion || video.ended) return;
+                    var progress = Math.min(video.currentTime / duration * 100, 99);
+                    progressBar.style.width = progress + '%';
+                    progressPercentage.textContent = Math.round(progress) + '%';
+                    var elapsed = (Date.now() - startTime) / 1000;
+                    var remaining = progress > 1 ? (elapsed / progress * (100 - progress)) : 0;
+                    convertNote.textContent = '转换中... 剩余约 ' + Math.ceil(remaining) + ' 秒';
+                    if (video.ended || (video.paused && video.currentTime >= duration - 0.2)) {
+                        if (recorder && recorder.state === 'recording') recorder.stop();
+                        return;
+                    }
+                    requestAnimationFrame(monitorProgress);
+                })();
+
+                video.onended = function () {
+                    if (recorder && recorder.state === 'recording') recorder.stop();
+                };
+            }).catch(function (e) {
+                reject(new Error('视频播放失败：' + e.message));
+            });
+        });
+    }
+
+    // ---- Main conversion ----
     convertBtn.addEventListener('click', function () {
         if (!sourceFile) return;
         startConversion();
@@ -170,7 +446,13 @@
 
     function startConversion() {
         var video = videoPlayer;
-        if (video.readyState < 2) {
+        var browserCanPlay = video.readyState >= 2;
+        var fmt = outputFormat.value;
+
+        // If browser can't decode or format needs FFmpeg, use FFmpeg path
+        var useFFmpeg = needsFFmpeg(fmt) || !browserCanPlay;
+
+        if (!browserCanPlay && !useFFmpeg) {
             showModal('视频尚未加载完成，请稍后再试。');
             return;
         }
@@ -192,27 +474,6 @@
         var fpsSelect = parseInt(frameRate.value) || 0;
         var includeAudio = keepAudio.checked;
         var videoBitrateVal = getQualityBitrate() * 1000;
-        var duration = video.duration;
-        var needsCanvas = (targetRes.width !== origW || targetRes.height !== origH || fpsSelect > 0);
-
-        // Setup canvas (stays hidden, only used internally for resizing)
-        var canvas = previewCanvas;
-        var ctx;
-        if (needsCanvas) {
-            canvas.width = targetRes.width;
-            canvas.height = targetRes.height;
-            ctx = canvas.getContext('2d');
-        }
-
-        // Prepare video for playback — keep visible as progress feedback
-        video.muted = true;
-        video.playsInline = true;
-        video.controls = false;
-        video.currentTime = 0;
-
-        var chunks = [];
-        var recorder;
-        var startTime = Date.now();
 
         function cleanup() {
             video.controls = true;
@@ -226,156 +487,51 @@
 
         function onError(msg) {
             cancelConversion = true;
-            if (recorder && recorder.state === 'recording') {
-                try { recorder.stop(); } catch (e) { }
-            }
             cleanup();
             showModal(msg);
         }
 
-        // Step 1: Start playback first
-        video.play().then(function () {
-            convertNote.textContent = '转换中...';
+        function onSuccess(blob, outExt) {
+            outputBlob = blob;
+            var outUrl = URL.createObjectURL(blob);
+            outputVideo.src = outUrl;
+            outputSection.style.display = '';
 
-            // Step 2: Now that video is playing, capture the stream
-            var sourceStream;
-            try {
-                sourceStream = video.captureStream(fpsSelect || undefined);
-            } catch (e) {
-                sourceStream = video.captureStream();
-            }
-
-            var videoTracks = sourceStream.getVideoTracks();
-            if (videoTracks.length === 0) {
-                onError('无法获取视频轨道，该格式可能不被浏览器支持。');
-                return;
-            }
-
-            // Step 3: Build final stream (canvas for resize, or direct)
-            if (needsCanvas) {
-                var canvasStream = canvas.captureStream(fpsSelect || 30);
-                var canvasVideoTrack = canvasStream.getVideoTracks()[0];
-                var combined = new MediaStream();
-                combined.addTrack(canvasVideoTrack);
-                if (includeAudio) {
-                    sourceStream.getAudioTracks().forEach(function (t) { combined.addTrack(t); });
-                }
-                sourceStream = combined;
-            } else if (!includeAudio) {
-                sourceStream.getAudioTracks().forEach(function (t) { t.stop(); });
-            }
-
-            // Step 4: Create MediaRecorder with the live stream
-            var mimeType = getSupportedMime();
-            try {
-                recorder = new MediaRecorder(sourceStream, {
-                    mimeType: mimeType,
-                    videoBitsPerSecond: videoBitrateVal
-                });
-            } catch (e) {
-                try {
-                    recorder = new MediaRecorder(sourceStream, {
-                        mimeType: 'video/webm',
-                        videoBitsPerSecond: videoBitrateVal
-                    });
-                    mimeType = 'video/webm';
-                } catch (e2) {
-                    onError('浏览器不支持视频录制。请使用 Chrome 或 Edge 浏览器。');
-                    return;
-                }
-            }
-
-            recorder.ondataavailable = function (e) {
-                if (e.data && e.data.size > 0) {
-                    chunks.push(e.data);
-                }
+            var origName = sourceFile.name.replace(/\.[^.]+$/, '');
+            resultInfo.innerHTML =
+                '<p><strong>输出格式：</strong>' + outExt.toUpperCase() + ' | ' +
+                '<strong>分辨率：</strong>' + targetRes.width + 'x' + targetRes.height + ' | ' +
+                '<strong>大小：</strong>' + formatSize(blob.size) + ' | ' +
+                '<strong>压缩比：</strong>' + (sourceFile.size > 0 ? (blob.size / sourceFile.size * 100).toFixed(1) : '0.0') + '%</p>';
+            downloadBtn.onclick = function () {
+                var a = document.createElement('a');
+                a.href = outUrl;
+                a.download = origName + '_converted.' + outExt;
+                a.click();
             };
+            cleanup();
+        }
 
-            recorder.onstop = function () {
+        // Choose engine
+        if (useFFmpeg) {
+            convertNote.textContent = '正在初始化 FFmpeg...';
+            getFFmpeg().then(function () {
+                return convertWithFFmpeg(sourceFile, fmt, targetRes, fpsSelect, includeAudio);
+            }).then(function (blob) {
                 if (cancelConversion) return;
-                var actualMime = recorder.mimeType || mimeType || 'video/webm';
-                var ext = actualMime.startsWith('video/mp4') ? 'mp4' : 'webm';
-                outputBlob = new Blob(chunks, { type: actualMime });
-
-                if (outputBlob.size === 0) {
-                    showModal('转换失败：可能是浏览器不支持该视频编码格式。');
-                    cleanup();
-                    return;
-                }
-
-                var outUrl = URL.createObjectURL(outputBlob);
-                outputVideo.src = outUrl;
-                outputSection.style.display = '';
-
-                var origName = sourceFile.name.replace(/\.[^.]+$/, '');
-                resultInfo.innerHTML =
-                    '<p><strong>输出格式：</strong>' + ext.toUpperCase() + ' | ' +
-                    '<strong>分辨率：</strong>' + targetRes.width + 'x' + targetRes.height + ' | ' +
-                    '<strong>大小：</strong>' + formatSize(outputBlob.size) + ' | ' +
-                    '<strong>压缩比：</strong>' + (sourceFile.size > 0 ? (outputBlob.size / sourceFile.size * 100).toFixed(1) : '0.0') + '%</p>';
-                downloadBtn.onclick = function () {
-                    var a = document.createElement('a');
-                    a.href = outUrl;
-                    a.download = origName + '_converted.' + ext;
-                    a.click();
-                };
-
-                cleanup();
-            };
-
-            recorder.onerror = function (e) {
-                onError('录制出错：' + (e.error ? e.error.message : '未知错误'));
-            };
-
-            // Step 5: Start recording
-            try {
-                recorder.start(250);
-            } catch (e) {
-                onError('启动录制失败：' + e.message);
-                return;
-            }
-
-            // Step 6: Draw canvas frames if needed
-            if (needsCanvas) {
-                drawCanvasFrames();
-            }
-
-            // Step 7: Monitor progress
-            monitorProgress();
-        }).catch(function (e) {
-            onError('视频播放失败：' + e.message + '。该视频格式可能不被浏览器支持。');
-        });
-
-        function drawCanvasFrames() {
-            if (cancelConversion) return;
-            if (video.ended || (video.paused && video.currentTime >= duration - 0.2)) return;
-            ctx.drawImage(video, 0, 0, targetRes.width, targetRes.height);
-            requestAnimationFrame(drawCanvasFrames);
+                if (blob.size === 0) { onError('转换失败：输出为空。'); return; }
+                onSuccess(blob, getOutputExtension(fmt));
+            }).catch(function (e) {
+                if (!cancelConversion) onError('FFmpeg 转换失败：' + e.message);
+            });
+        } else {
+            convertWithMediaRecorder(video, targetRes, fpsSelect, includeAudio, videoBitrateVal).then(function (result) {
+                if (cancelConversion) return;
+                onSuccess(result.blob, result.ext);
+            }).catch(function (e) {
+                if (!cancelConversion) onError(e.message);
+            });
         }
-
-        function monitorProgress() {
-            if (cancelConversion || video.ended) return;
-            var progress = Math.min(video.currentTime / duration * 100, 99);
-            progressBar.style.width = progress + '%';
-            progressPercentage.textContent = Math.round(progress) + '%';
-            var elapsed = (Date.now() - startTime) / 1000;
-            var remaining = progress > 1 ? (elapsed / progress * (100 - progress)) : 0;
-            convertNote.textContent = '转换中... 剩余约 ' + Math.ceil(remaining) + ' 秒';
-
-            if (video.ended || (video.paused && video.currentTime >= duration - 0.2)) {
-                if (recorder && recorder.state === 'recording') {
-                    recorder.stop();
-                }
-                return;
-            }
-            requestAnimationFrame(monitorProgress);
-        }
-
-        video.onended = function () {
-            if (recorder && recorder.state === 'recording') {
-                recorder.stop();
-            }
-        };
     }
 
     settingsSection.style.display = 'none';

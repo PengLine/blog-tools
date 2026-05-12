@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="../../common/css/style.css">
     <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js"></script>
 </head>
 
 <body>
@@ -107,9 +108,9 @@
             </p>
 
             <div class="upload-section">
-                <input type="file" id="videoUpload" accept="video/*">
+                <input type="file" id="videoUpload" accept="video/*,.wmv,.avi,.mov,.mkv,.flv">
                 <label for="videoUpload" class="upload-btn">上传视频文件</label>
-                <p class="upload-note">* 支持 mp4, webm, avi, mov, mkv, ogv, 3gp, flv, wmv, ts 等格式</p>
+                <p class="upload-note">* 支持 MP4, WebM, WMV, AVI, MOV, MKV, FLV, OGV, 3GP 等常见视频格式</p>
             </div>
 
             <div class="preview-section" id="previewSection">
@@ -132,6 +133,10 @@
                             <option value="webm">WebM (VP8 编码)</option>
                             <option value="webm-vp9">WebM (VP9 编码 · 更小体积)</option>
                             <option value="mp4">MP4 (H.264 编码)</option>
+                            <option value="wmv">WMV (Windows Media)</option>
+                            <option value="mov">MOV (QuickTime)</option>
+                            <option value="avi">AVI</option>
+                            <option value="mkv">MKV (Matroska)</option>
                         </select>
                     </div>
                     <div class="input-group">
@@ -167,13 +172,6 @@
                             <option value="custom">自定义</option>
                         </select>
                     </div>
-                    <div class="input-group" id="customResRow" style="display: none;">
-                        <label for="customWidth">自定义宽度 (px)：</label>
-                        <input type="number" id="customWidth" min="64" max="4096" value="1280" step="16">
-                    </div>
-                </div>
-
-                <div class="setting-row">
                     <div class="input-group">
                         <label for="frameRate">帧率：</label>
                         <select id="frameRate">
@@ -185,7 +183,15 @@
                         </select>
                     </div>
                     <div class="input-group">
-                        <label><input type="checkbox" id="keepAudio" checked> 保留音频</label>
+                        <label for="frameRate">音频：</label>
+                        <label><input type="checkbox" id="keepAudio" checked> 保留原音频</label>
+                    </div>
+                </div>
+
+                <div class="setting-row" id="customResRow" style="display: none;">
+                    <div class="input-group">
+                        <label for="customWidth">自定义宽度 (px)：</label>
+                        <input type="number" id="customWidth" min="64" max="4096" value="1280" step="16">
                     </div>
                 </div>
 
