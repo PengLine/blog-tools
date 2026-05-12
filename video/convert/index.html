@@ -3,11 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="视频免费在线裁剪工具,免费在线视频裁剪工具,支持范围大小和时间长度裁剪,隐私保护">
-    <meta name="keywords" content="视频免费在线裁剪,免费在线视频裁剪,视频大小在线裁剪,免费视频长度裁剪,隐私视频裁剪">
+    <meta name="description" content="视频格式在线免费转换，支持MP4、WebM、MOV、AVI等格式互转，纯前端处理保护隐私，视频格式转换工具">
+    <meta name="keywords" content="视频格式转换, 视频在线转换, 免费视频转换, MP4转WebM, WebM转MP4, 隐私视频转换, 视频编码转换">
     <meta name="author" content="余一叶知秋尽">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>免费视频剪辑工具，支持范围大小和时间长度裁剪</title>
+    <title>视频格式转换 - 免费在线视频格式转换工具</title>
 
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="../../common/css/style.css">
@@ -38,13 +38,13 @@
             </a>
 
             <div class="nav-section">视频工具</div>
-            <a href="../../video/cropping/index.html" class="active">
+            <a href="../../video/cropping/index.html">
                 <span class="nav-icon">✂️</span>视频裁剪
             </a>
             <a href="../../video/watermark/index.html">
                 <span class="nav-icon">🎥</span>视频水印
             </a>
-            <a href="../../video/convert/index.html">
+            <a href="../../video/convert/index.html" class="active">
                 <span class="nav-icon">🔄</span>视频转换
             </a>
 
@@ -91,95 +91,129 @@
     </aside>
     <main class="main">
         <section class="page-hero">
-            <h1>视频剪辑工具</h1>
-            <p>支持<b style="color: cadetblue;">尺寸裁剪、时长裁剪</b>，拖动裁剪框或调整下方参数，即可执行裁剪。</p>
+            <h1>视频格式转换</h1>
+            <p>支持<b style="color: cadetblue;">MP4、WebM、AVI、MOV、MKV</b>等常见格式，转换为<b style="color: cadetblue;">WebM</b>或<b
+                    style="color: cadetblue;">MP4</b>格式，可自定义码率和分辨率。</p>
         </section>
         <div class="top-ad">
             <amp-ad width="970" height="90" type="adsense" data-ad-client="ca-pub-2048978820706528"
-                data-ad-slot="9267161710" data-auto-format="rspv" data-full-width="" layout="responsive">
+                data-ad-slot="5319728132" data-auto-format="rspv" data-full-width="" layout="responsive">
             </amp-ad>
         </div>
         <div class="container">
-            <p class="description">*（<b><em>所有处理均在您本地完成，不会上传网络服务器，无需担忧隐私泄漏。</em></b>）</p>
+            <p class="description">*（<b><em>所有处理均在您本地完成，不会上传网络服务器，无需担忧隐私泄漏</em></b>）</p>
+            <p class="description">
+                <b>注意：</b> 最大支持100MB视频文件。视频越大处理时间越长，建议先将视频裁剪到所需片段再转换格式。
+            </p>
+
             <div class="upload-section">
                 <input type="file" id="videoUpload" accept="video/*">
                 <label for="videoUpload" class="upload-btn">上传视频文件</label>
-                <p class="upload-note">* 支持最大视频文件100MB，建议大小不超过50MB</p>
+                <p class="upload-note">* 支持 mp4, webm, avi, mov, mkv, ogv, 3gp, flv, wmv, ts 等格式</p>
             </div>
 
             <div class="preview-section" id="previewSection">
-                <div class="cropping-video-container">
-                    <div id="videoInfo" class="video-info"></div>
-                    <video id="videoPlayer" controls></video>
-                    <div id="cropSelection" class="crop-selection"></div>
-                    <canvas id="cropCanvas" class="hidden"></canvas>
+                <div class="video-info" id="videoInfo">
+                    <p>请上传视频文件</p>
                 </div>
-                <div class="crop-instructions">
-                    <p>提示: 缩放或拖拽视频区域裁剪框，手动调节大小和位置。通过调整下方参数，可实时预览裁剪效果。</p>
+                <div class="video-container">
+                    <video id="videoPlayer" controls></video>
+                    <canvas id="previewCanvas" class="hidden"></canvas>
                 </div>
             </div>
 
             <div class="settings-section" id="settingsSection">
-                <div class="dimension-settings">
-                    <h3>尺寸裁剪</h3>
-                    <div class="dimension-row">
-                        <div class="input-group">
-                            <label for="cropWidth">宽度 (像素):</label>
-                            <input type="number" id="cropWidth" min="100" step="1">
-                        </div>
-                        <div class="input-group">
-                            <label for="cropHeight">高度 (像素):</label>
-                            <input type="number" id="cropHeight" min="100" step="1">
-                        </div>
+                <h3>转换设置</h3>
+
+                <div class="setting-row">
+                    <div class="input-group">
+                        <label for="outputFormat">目标格式：</label>
+                        <select id="outputFormat">
+                            <option value="webm">WebM (VP8 编码)</option>
+                            <option value="webm-vp9">WebM (VP9 编码 · 更小体积)</option>
+                            <option value="mp4">MP4 (H.264 编码)</option>
+                        </select>
                     </div>
-                    <div class="coordinate-row">
-                        <div class="input-group">
-                            <label for="cropX">起始X坐标:</label>
-                            <input type="number" id="cropX" min="0" step="1">
-                        </div>
-                        <div class="input-group">
-                            <label for="cropY">起始Y坐标:</label>
-                            <input type="number" id="cropY" min="0" step="1">
-                        </div>
-                    </div>
-                    <div class="crop-mode" hidden>
-                        <label><input type="checkbox" id="enableDragCrop" checked> 启用手动画框裁剪</label>
+                    <div class="input-group">
+                        <label for="videoQuality">视频质量：</label>
+                        <select id="videoQuality">
+                            <option value="high">高 (较大文件)</option>
+                            <option value="medium" selected>中 (推荐)</option>
+                            <option value="low">低 (较小文件)</option>
+                            <option value="custom">自定义码率</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="time-settings">
-                    <h3>时长裁剪</h3>
-                    <div class="time-row">
-                        <div class="input-group">
-                            <label for="startTime">开始时间 (秒):</label>
-                            <input type="number" id="startTime" min="0" step="0.1">
-                        </div>
-                        <div class="input-group">
-                            <label for="endTime">结束时间 (秒):</label>
-                            <input type="number" id="endTime" min="0" step="0.1">
-                        </div>
+                <div class="setting-row" id="customBitrateRow" style="display: none;">
+                    <div class="input-group">
+                        <label for="videoBitrate">视频码率 (kbps)：</label>
+                        <input type="number" id="videoBitrate" min="100" max="20000" value="2500" step="100">
                     </div>
-                    <div class="time-display">
-                        <p>视频总时长: <span id="totalDuration">00:00</span></p>
+                    <div class="input-group">
+                        <label for="audioBitrate">音频码率 (kbps)：</label>
+                        <input type="number" id="audioBitrate" min="32" max="320" value="128" step="32">
                     </div>
+                </div>
+
+                <div class="setting-row">
+                    <div class="input-group">
+                        <label for="resolutionScale">分辨率缩放：</label>
+                        <select id="resolutionScale">
+                            <option value="100">原始尺寸</option>
+                            <option value="75">75% (缩小)</option>
+                            <option value="50">50% (一半)</option>
+                            <option value="25">25% (四分之一)</option>
+                            <option value="custom">自定义</option>
+                        </select>
+                    </div>
+                    <div class="input-group" id="customResRow" style="display: none;">
+                        <label for="customWidth">自定义宽度 (px)：</label>
+                        <input type="number" id="customWidth" min="64" max="4096" value="1280" step="16">
+                    </div>
+                </div>
+
+                <div class="setting-row">
+                    <div class="input-group">
+                        <label for="frameRate">帧率：</label>
+                        <select id="frameRate">
+                            <option value="0">保持原始帧率</option>
+                            <option value="30">30 fps</option>
+                            <option value="25">25 fps</option>
+                            <option value="24">24 fps</option>
+                            <option value="15">15 fps</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label><input type="checkbox" id="keepAudio" checked> 保留音频</label>
+                    </div>
+                </div>
+
+                <div class="format-info" id="formatInfo">
+                    <p id="formatInfoText"></p>
                 </div>
 
                 <div class="action-buttons">
-                    <button id="applyCropBtn">开始执行裁剪</button>
-                    <div class="progress-container" id="progress-container" style="display: none;">
+                    <button id="convertBtn" disabled>
+                        <span id="convertBtnText">开始转换</span>
+                        <span id="convertBtnLoading" style="display: none;">转换中...</span>
+                    </button>
+                    <div class="progress-container" id="progressContainer" style="display: none;">
                         <div class="progress-bar" id="progressBar"></div>
                         <span class="progress-percentage" id="progressPercentage">0%</span>
                     </div>
+                    <p class="convert-note" id="convertNote" style="display: none;"></p>
                 </div>
             </div>
 
             <div class="output-section" id="outputSection">
-                <h2>裁剪结果</h2>
+                <h2>转换结果</h2>
+                <div class="result-info" id="resultInfo"></div>
                 <div class="result-container">
                     <video id="outputVideo" controls></video>
                 </div>
                 <div class="download-buttons">
-                    <button id="downloadBtn">下载裁剪视频</button>
+                    <button id="downloadBtn">下载转换后视频</button>
                 </div>
             </div>
         </div>
@@ -202,10 +236,8 @@
             </div>
         </div>
 
-        <!-- 引入视频处理脚本 -->
         <script src="script.js"></script>
 
-        <!-- 页脚 -->
         <footer class="footer">
             <p>&copy; 2026 工具系统. PengLine 保留所有权利.</p>
         </footer>
